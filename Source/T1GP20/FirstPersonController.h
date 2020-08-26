@@ -29,6 +29,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool bInvertLook = false;
 
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -49,4 +50,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	UCameraComponent* FirstPersonCamera;
 
+	void Crouch();
+	void StopCrouch();
 };

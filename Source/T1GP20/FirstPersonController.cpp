@@ -1,5 +1,5 @@
-#include "GameFramework/CharacterMovementComponent.h"
 #include "FirstPersonController.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 AFirstPersonController::AFirstPersonController()
@@ -39,9 +39,15 @@ void AFirstPersonController::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	InputComponent->BindAxis("MoveForward", this, &AFirstPersonController::MoveY);
 	InputComponent->BindAxis("Turn", this, &AFirstPersonController::LookY);
 	InputComponent->BindAxis("LookUp", this, &AFirstPersonController::LookX);
+	InputComponent->BindAction("Crouch", IE_Pressed, this, &AFirstPersonController::Crouch);
+	InputComponent->BindAction("Crouch", IE_Released, this, &AFirstPersonController::StopCrouch);
 
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	/*InputComponent->BindAction("Crouch", IE_Pressed, this, &ACharacter::Crouch);
+	InputComponent->BindAction("Crouch", IE_Released, this, &ACharacter::UnCrouch);*/
+
+
 	
 }
 
@@ -85,4 +91,16 @@ void AFirstPersonController::LookY(float Input)
 	{
 		AddActorLocalRotation(FRotator(0, Input, 0));
 	}
+}
+
+void AFirstPersonController::Crouch()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Crouchy crouch"));
+	GetCharacterMovement()->Crouch(true);
+}
+
+void AFirstPersonController::StopCrouch()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Stopped crouching"));
+	GetCharacterMovement()->UnCrouch(false);
 }
