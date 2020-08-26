@@ -2,12 +2,13 @@
 
 #pragma once
 
+#include "PlayerScripts/Interactable.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
 UCLASS()
-class T1GP20_API AItem : public AActor
+class T1GP20_API AItem : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 	
@@ -20,7 +21,7 @@ public:
 	class USphereComponent* CollisionVolume;
 
 	/*** Base Mesh Component */
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item | Mesh")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Item | Mesh")
 	class UStaticMeshComponent* ObjectMesh;
 
 	/** Base pariticle effect with object */
@@ -47,6 +48,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void Interact_Implementation() override;
 
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

@@ -15,14 +15,14 @@ public:
 	// Sets default values for this actor's properties
 	APressurePad();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad")
+	class ATriggerDoor* TriggerDoor;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pressure Pad")
 	class UBoxComponent* TriggerBox;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pressure Pad")
 	class UStaticMeshComponent* ScalePad;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pressure Pad")
-	UStaticMeshComponent* Door;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item")
 	bool bActiveWeightCheck;
@@ -45,7 +45,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "bActiveItemToCheck" ))
 	class AItem* KeyItem;
 
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -58,19 +57,10 @@ public:
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Pressure Pad")
-	void OpenDoor();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Pressure Pad")
-	void CloseDoor();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Pressure Pad")
 	void LowerScalePad();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Pressure Pad")
 	void RaiseScalePad();
-
-	UFUNCTION(BlueprintCallable, Category = "Pressure Pad")
-	void UpdateDoorLocation(FVector Location);
 
 	UFUNCTION(BlueprintCallable, Category = "Pressure Pad")
 	void UpdateScalePadLocation(FVector Location);
@@ -78,7 +68,6 @@ public:
 private:
 	FVector InitialDoorLocation;
 	FVector InitialScalePadLocation;
-	bool IsDoorOpened;
 	void TriggerPass();
 	void BackToUnTrigger();
 };

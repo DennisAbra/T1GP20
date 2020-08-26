@@ -62,4 +62,9 @@ void AItem::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* Other
 {
 }
 
+void AItem::Interact_Implementation()
+{
+
+}
+
 

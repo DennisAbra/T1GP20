@@ -8,6 +8,7 @@
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
 #include "Item.h"
+#include "TriggerDoor.h"
 
 // Sets default values
 APressurePad::APressurePad()
@@ -18,13 +19,9 @@ APressurePad::APressurePad()
 	ScalePad = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ScalePad"));
 	ScalePad->SetupAttachment(GetRootComponent());
 
-	Door = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door"));
-	Door->SetupAttachment(GetRootComponent());
-
 	bActiveItemCheck = false;
 	bActiveWeightCheck = false;
 
-	IsDoorOpened = false;
 }
 
 // Called when the game starts or when spawned
@@ -35,27 +32,28 @@ void APressurePad::BeginPlay()
 	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &APressurePad::OnOverlapBegin);
 	TriggerBox->OnComponentEndOverlap.AddDynamic(this, &APressurePad::OnOverlapEnd);
 
-	InitialDoorLocation = Door->GetComponentLocation();
 	InitialScalePadLocation = ScalePad->GetComponentLocation();
-
 }
 
 void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!IsDoorOpened)
+	if (TriggerDoor && !TriggerDoor->bIsDoorOpened)
 	{
 		if (bActiveWeightCheck)
 		{
 			if (OtherActor && OtherComp)
 			{
 				float ObjectWeight = OtherComp->GetMass();
-				if (ObjectWeight <= MaxWeightToTrigger && ObjectWeight >= MinWeightToTrigger)
+				if (ObjectWeight)
 				{
-					TriggerPass();
+					if (ObjectWeight <= MaxWeightToTrigger && ObjectWeight >= MinWeightToTrigger)
+					{
+						TriggerPass();
+					}
 				}
 			}
 		}
-		if (bActiveItemCheck)
+		else if (bActiveItemCheck)
 		{
 			if (OtherActor)
 			{
@@ -72,7 +70,7 @@ void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 
 void APressurePad::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (IsDoorOpened)
+	if (TriggerDoor && TriggerDoor->bIsDoorOpened)
 	{
 		if (OtherActor)
 		{
@@ -81,12 +79,6 @@ void APressurePad::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor
 	}
 }
 
-void APressurePad::UpdateDoorLocation(FVector Location)
-{
-	FVector NewLocation = InitialDoorLocation;
-	NewLocation += Location;
-	Door->SetWorldLocation(NewLocation);
-}
 
 void APressurePad::UpdateScalePadLocation(FVector Location)
 {
@@ -97,8 +89,12 @@ void APressurePad::UpdateScalePadLocation(FVector Location)
 
 void APressurePad::TriggerPass()
 {
+	if (TriggerDoor)
+	{
+		TriggerDoor->UpdatePressurePadStatus(this, true);
+	}
+
 	LowerScalePad();
-	OpenDoor();
 	if (PassEffect)
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PassEffect, GetActorLocation(), FRotator(0.f), true);
@@ -107,13 +103,16 @@ void APressurePad::TriggerPass()
 	{
 		UGameplayStatics::PlaySound2D(this, PassSound);
 	}
-	IsDoorOpened = true;
 }
 
 void APressurePad::BackToUnTrigger()
 {
 	RaiseScalePad();
-	CloseDoor();
-	IsDoorOpened = false;
+	if (TriggerDoor)
+	{
+		TriggerDoor->UpdatePressurePadStatus(this, false);
+		TriggerDoor->CloseDoor();
+		TriggerDoor->bIsDoorOpened = false;
+	}
 }
 
