@@ -1,9 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
+#include "GameFramework/CharacterMovementComponent.h"
 #include "FirstPersonController.h"
 
-// Sets default values
+
 AFirstPersonController::AFirstPersonController()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -14,6 +12,8 @@ AFirstPersonController::AFirstPersonController()
 	bUseControllerRotationYaw = false;
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCamera->AttachTo(RootComponent);
+
+	GetCharacterMovement()->AirControl = AirControl;
 }
 
 // Called when the game starts or when spawned
@@ -39,6 +39,10 @@ void AFirstPersonController::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	InputComponent->BindAxis("MoveForward", this, &AFirstPersonController::MoveY);
 	InputComponent->BindAxis("Turn", this, &AFirstPersonController::LookY);
 	InputComponent->BindAxis("LookUp", this, &AFirstPersonController::LookX);
+
+	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	
 }
 
 

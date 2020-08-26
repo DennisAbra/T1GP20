@@ -21,6 +21,9 @@ public:
 	float Sensitivity = 1;
 
 	UPROPERTY(EditAnywhere)
+	float AirControl = 5;
+
+	UPROPERTY(EditAnywhere)
 	float MaxLookRange = 65;
 
 	UPROPERTY(EditAnywhere)
