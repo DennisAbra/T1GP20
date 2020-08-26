@@ -7,15 +7,6 @@
 #include "GameFramework/Actor.h"
 #include "PickupableItem.generated.h"
 
-UENUM()
-enum Shape
-{
-	Round,
-	Square,
-	Banana,
-	Carrot
-};
-
 UCLASS()
 class T1GP20_API APickupableItem : public AActor, public IInteractable
 {
@@ -29,9 +20,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int Weight = 10;
-
-	UPROPERTY(EditAnywhere)
-		TEnumAsByte<Shape> _Shape;
 
 protected:
 	// Called when the game starts or when spawned
