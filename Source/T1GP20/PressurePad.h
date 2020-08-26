@@ -24,28 +24,33 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pressure Pad")
 	UStaticMeshComponent* Door;
 
-	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Pressure Pad | Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item")
+	bool bActiveWeightCheck;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "bActiveWeightCheck"))
 	float MinWeightToTrigger;
 
-	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Pressure Pad | Item")
+	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "bActiveWeightCheck"))
 	float MaxWeightToTrigger;
 
-	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Pressure Pad | Item | ParticleSystem")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item | ParticleSystem")
 	class UParticleSystem* PassEffect;
 
-	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Pressure Pad | Item | Sound")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item | Sound")
 	class USoundCue* PassSound;
 
-	bool IsDoorOpened;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item")
+	bool bActiveItemCheck;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "bActiveItemToCheck" ))
+	class AItem* KeyItem;
+
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -67,6 +72,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Pressure Pad")
 	void UpdateDoorLocation(FVector Location);
 
+	UFUNCTION(BlueprintCallable, Category = "Pressure Pad")
+	void UpdateScalePadLocation(FVector Location);
+
 private:
 	FVector InitialDoorLocation;
+	FVector InitialScalePadLocation;
+	bool IsDoorOpened;
+	void TriggerPass();
+	void BackToUnTrigger();
 };

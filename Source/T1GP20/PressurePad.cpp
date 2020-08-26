@@ -7,13 +7,11 @@
 #include "Particles/ParticleSystem.h"
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
+#include "Item.h"
 
 // Sets default values
 APressurePad::APressurePad()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 	TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerBox"));
 	RootComponent = TriggerBox;
 
@@ -22,6 +20,9 @@ APressurePad::APressurePad()
 
 	Door = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door"));
 	Door->SetupAttachment(GetRootComponent());
+
+	bActiveItemCheck = false;
+	bActiveWeightCheck = false;
 
 	IsDoorOpened = false;
 }
@@ -35,46 +36,47 @@ void APressurePad::BeginPlay()
 	TriggerBox->OnComponentEndOverlap.AddDynamic(this, &APressurePad::OnOverlapEnd);
 
 	InitialDoorLocation = Door->GetComponentLocation();
-}
-
-// Called every frame
-void APressurePad::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
+	InitialScalePadLocation = ScalePad->GetComponentLocation();
 
 }
 
 void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("On"));
-	if (OtherActor && OtherComp)
+	if (!IsDoorOpened)
 	{
-		float ObjectWeight = OtherComp->GetMass();
-		if (ObjectWeight <= MaxWeightToTrigger && ObjectWeight >= MinWeightToTrigger)
+		if (bActiveWeightCheck)
 		{
-			LowerScalePad();
-			OpenDoor();
-			if (PassEffect)
+			if (OtherActor && OtherComp)
 			{
-				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PassEffect, GetActorLocation(), FRotator(0.f), true);
+				float ObjectWeight = OtherComp->GetMass();
+				if (ObjectWeight <= MaxWeightToTrigger && ObjectWeight >= MinWeightToTrigger)
+				{
+					TriggerPass();
+				}
 			}
-			if (PassSound)
+		}
+		if (bActiveItemCheck)
+		{
+			if (OtherActor)
 			{
-				UGameplayStatics::PlaySound2D(this, PassSound);
+				AItem* ObjectToTest = Cast<AItem>(OtherActor);
+				if (ObjectToTest == KeyItem)
+				{
+					TriggerPass();
+				}
 			}
-			IsDoorOpened = true;
 		}
 	}
 }
 
+
 void APressurePad::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Off"));
 	if (IsDoorOpened)
 	{
 		if (OtherActor)
 		{
-			CloseDoor();
+			BackToUnTrigger();
 		}
 	}
 }
@@ -84,5 +86,34 @@ void APressurePad::UpdateDoorLocation(FVector Location)
 	FVector NewLocation = InitialDoorLocation;
 	NewLocation += Location;
 	Door->SetWorldLocation(NewLocation);
+}
+
+void APressurePad::UpdateScalePadLocation(FVector Location)
+{
+	FVector NewLocation = InitialScalePadLocation;
+	NewLocation += Location;
+	ScalePad->SetWorldLocation(NewLocation);
+}
+
+void APressurePad::TriggerPass()
+{
+	LowerScalePad();
+	OpenDoor();
+	if (PassEffect)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PassEffect, GetActorLocation(), FRotator(0.f), true);
+	}
+	if (PassSound)
+	{
+		UGameplayStatics::PlaySound2D(this, PassSound);
+	}
+	IsDoorOpened = true;
+}
+
+void APressurePad::BackToUnTrigger()
+{
+	RaiseScalePad();
+	CloseDoor();
+	IsDoorOpened = false;
 }
 
