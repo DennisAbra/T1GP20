@@ -1,5 +1,5 @@
-#include "GameFramework/CharacterMovementComponent.h"
 #include "FirstPersonController.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 AFirstPersonController::AFirstPersonController()
