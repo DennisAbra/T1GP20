@@ -42,6 +42,8 @@ private:
 	void MoveY(float Input);
 	void LookX(float Input);
 	void LookY(float Input);
+	
+
 
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	UCameraComponent* FirstPersonCamera;

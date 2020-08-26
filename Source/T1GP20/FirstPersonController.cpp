@@ -70,7 +70,7 @@ void AFirstPersonController::LookX(float Input)
 		float CurrentPitch = FirstPersonCamera->GetRelativeRotation().Pitch + Input;
 		if (CurrentPitch < MaxLookRange && CurrentPitch > -MaxLookRange)
 		{
-			FirstPersonCamera->AddLocalRotation(FRotator(Input, 0, 0));
+			FirstPersonCamera->AddLocalRotation(FRotator(Input * Sensitivity, 0, 0));
 		}
 	}
 }
@@ -79,6 +79,6 @@ void AFirstPersonController::LookY(float Input)
 {
 	if (Input)
 	{
-		AddActorLocalRotation(FRotator(0, Input, 0));
+		AddActorLocalRotation(FRotator(0, Input * Sensitivity, 0));
 	}
 }
