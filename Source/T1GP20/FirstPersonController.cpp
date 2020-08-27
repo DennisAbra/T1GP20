@@ -14,20 +14,20 @@ AFirstPersonController::AFirstPersonController()
 	FirstPersonCamera->AttachTo(RootComponent);
 
 	GetCharacterMovement()->AirControl = AirControl;
+	CrouchSpeed = Walkspeed * 0.5;
+	Sprintspeed = Walkspeed * 2;
 }
 
 // Called when the game starts or when spawned
 void AFirstPersonController::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
 }
 
 // Called every frame
 void AFirstPersonController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -39,17 +39,17 @@ void AFirstPersonController::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	InputComponent->BindAxis("MoveForward", this, &AFirstPersonController::MoveY);
 	InputComponent->BindAxis("Turn", this, &AFirstPersonController::LookY);
 	InputComponent->BindAxis("LookUp", this, &AFirstPersonController::LookX);
-
 	InputComponent->BindAction("Crouch", IE_Pressed, this, &AFirstPersonController::Crouch);
 	InputComponent->BindAction("Crouch", IE_Released, this, &AFirstPersonController::StopCrouch);
 
-	InputComponent->BindAction("Sprint", IE_Pressed, this, &AFirstPersonController::Sprint);
-	InputComponent->BindAction("Sprint", IE_Released, this, &AFirstPersonController::StopSprint);
-
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	/*InputComponent->BindAction("Crouch", IE_Pressed, this, &ACharacter::Crouch);
-	InputComponent->BindAction("Crouch", IE_Released, this, &ACharacter::UnCrouch);*/
+<<<<<<< Updated upstream
+
+
+	
+=======
+>>>>>>> Stashed changes
 }
 
 
@@ -71,14 +71,28 @@ void AFirstPersonController::MoveY(float Input)
 
 void AFirstPersonController::LookX(float Input)
 {
-	Input = bInvertLook ? Input : -Input;
+	if (!bInvertLook)
+	{
+		Input = -Input;
+	}
 
 	if (Input)
 	{
 		float CurrentPitch = FirstPersonCamera->GetRelativeRotation().Pitch + Input;
-		if (CurrentPitch < MaxLookUpRange && CurrentPitch > -MaxLookDownRange)
+		if (CurrentPitch < MaxLookRange && CurrentPitch > -MaxLookRange)
 		{
-			FirstPersonCamera->AddLocalRotation(FRotator(Input * Sensitivity, 0, 0));
+<<<<<<< Updated upstream
+			FirstPersonCamera->AddLocalRotation(FRotator(Input, 0, 0));
+=======
+			if (!bIsSprinting)
+			{
+				FirstPersonCamera->AddLocalRotation(FRotator(Input * Sensitivity, 0, 0));
+			}
+			else
+			{
+				FirstPersonCamera->AddLocalRotation(FRotator(Input * Sensitivity * SprintSlowSensMultiplyer, 0, 0));
+			}
+>>>>>>> Stashed changes
 		}
 	}
 }
@@ -87,29 +101,59 @@ void AFirstPersonController::LookY(float Input)
 {
 	if (Input)
 	{
-		AddActorLocalRotation(FRotator(0, Input * Sensitivity, 0));
+<<<<<<< Updated upstream
+		AddActorLocalRotation(FRotator(0, Input, 0));
+=======
+		if (!bIsSprinting)
+		{
+			AddActorLocalRotation(FRotator(0, Input * Sensitivity, 0));
+		}
+		else
+		{
+			AddActorLocalRotation(FRotator(0, Input * Sensitivity * SprintSlowSensMultiplyer, 0));
+		}
+>>>>>>> Stashed changes
 	}
 }
 
 void AFirstPersonController::Crouch()
 {
+<<<<<<< Updated upstream
+	UE_LOG(LogTemp, Warning, TEXT("Crouchy crouch"));
+=======
+	bIsCrouching = true;
+>>>>>>> Stashed changes
 	GetCharacterMovement()->Crouch(true);
+	GetCharacterMovement()->MaxWalkSpeed = CrouchSpeed;
 }
 
 void AFirstPersonController::StopCrouch()
 {
+<<<<<<< Updated upstream
+	UE_LOG(LogTemp, Warning, TEXT("Stopped crouching"));
 	GetCharacterMovement()->UnCrouch(false);
+}
+=======
+	bIsCrouching = false;
+	GetCharacterMovement()->UnCrouch(true);
+	GetCharacterMovement()->MaxWalkSpeed = Walkspeed;
 }
 
 void AFirstPersonController::Sprint()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Sprint"));
 	bIsSprinting = true;
-
+	if (!bIsCrouching)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = Sprintspeed;
+	}
 }
 
 void AFirstPersonController::StopSprint()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Stopsprint"));
 	bIsSprinting = false;
+	if (!bIsCrouching)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = Walkspeed;
+	}	
 }
+>>>>>>> Stashed changes
