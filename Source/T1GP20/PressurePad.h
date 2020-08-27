@@ -40,7 +40,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item | Sound")
 	class USoundCue* PassSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PressurePad | Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item")
 	EActiveStatus ActiveStatus;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "ActiveStatus == EActiveStatus::EAS_Weight || ActiveStatus == EActiveStatus::EAS_Both "))
