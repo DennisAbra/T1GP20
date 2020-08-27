@@ -104,6 +104,7 @@ void APressurePad::UpdateScalePadLocation(FVector Location)
 	ScalePad->SetWorldLocation(NewLocation);
 }
 
+
 void APressurePad::TriggerPass()
 {
 	if (TriggerDoor)
@@ -129,12 +130,13 @@ void APressurePad::BackToUnTrigger(AItem* Item)
 	{
 		CurrentAllItemsWeight -= Item->MassWeight;
 		ItemOnPadList.Remove(Item);
+		bWeightCorrect = CheckWeight();
 	}
 	if (Item == KeyItem)
 	{
 		bItemCorrect = false;
 	}
-	bWeightCorrect = false;
+
 	if (TriggerDoor)
 	{
 		TriggerDoor->UpdatePressurePadStatus(this, false);
@@ -153,6 +155,22 @@ void APressurePad::CheckItem(AItem* Item)
 			TriggerPass();
 		}
 	}
+}
+
+
+bool APressurePad::CheckWeight()
+{
+	float weight = 0;
+	for (auto Item : ItemOnPadList)
+	{
+		weight += Item.Value;
+	}
+
+	if (weight < MaxWeightToTrigger && weight > MinWeightToTrigger)
+	{
+		return true;
+	}
+	else return false;
 }
 
 void APressurePad::CheckWeight(AItem* Item)
