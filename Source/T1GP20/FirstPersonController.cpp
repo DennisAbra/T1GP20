@@ -48,8 +48,6 @@ void AFirstPersonController::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	/*InputComponent->BindAction("Crouch", IE_Pressed, this, &ACharacter::Crouch);
-	InputComponent->BindAction("Crouch", IE_Released, this, &ACharacter::UnCrouch);*/
 }
 
 
