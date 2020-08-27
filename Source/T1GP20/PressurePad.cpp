@@ -21,6 +21,8 @@ APressurePad::APressurePad()
 
 	bItemCorrect = false;
 	bWeightCorrect = false;
+
+	CurrentAllItemsWeight = 0.0f;
 }
 
 // Called when the game starts or when spawned
@@ -88,7 +90,8 @@ void APressurePad::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor
 	{
 		if (OtherActor)
 		{
-			BackToUnTrigger();
+			AItem* Object = Cast<AItem>(OtherActor);
+			BackToUnTrigger(Object);
 		}
 	}
 }
@@ -119,10 +122,18 @@ void APressurePad::TriggerPass()
 	}
 }
 
-void APressurePad::BackToUnTrigger()
+void APressurePad::BackToUnTrigger(AItem* Item)
 {
 	RaiseScalePad();
-	bItemCorrect = false;
+	if (ItemOnPadList.Contains(Item))
+	{
+		CurrentAllItemsWeight -= Item->MassWeight;
+		ItemOnPadList.Remove(Item);
+	}
+	if (Item == KeyItem)
+	{
+		bItemCorrect = false;
+	}
 	bWeightCorrect = false;
 	if (TriggerDoor)
 	{
@@ -134,11 +145,13 @@ void APressurePad::BackToUnTrigger()
 
 void APressurePad::CheckItem(AItem* Item)
 {
-	if (Item== KeyItem)
+	if (Item == KeyItem)
 	{
 		bItemCorrect = true;
 		if (ActiveStatus == EActiveStatus::EAS_KeyItem)
-		TriggerPass();
+		{
+			TriggerPass();
+		}
 	}
 }
 
@@ -147,12 +160,18 @@ void APressurePad::CheckWeight(AItem* Item)
 	float ObjectWeight = Item->MassWeight;
 	if (ObjectWeight)
 	{
-		if (ObjectWeight <= MaxWeightToTrigger && ObjectWeight >= MinWeightToTrigger)
+		if (!ItemOnPadList.Contains(Item))
+		{
+			ItemOnPadList.Add(Item, ObjectWeight);
+			CurrentAllItemsWeight += ObjectWeight;
+		}
+		if (CurrentAllItemsWeight <= MaxWeightToTrigger && CurrentAllItemsWeight >= MinWeightToTrigger)
 		{
 			bWeightCorrect = true;
 			if (ActiveStatus == EActiveStatus::EAS_Weight)
-			TriggerPass();
+				TriggerPass();
 		}
 	}
 }
+
 

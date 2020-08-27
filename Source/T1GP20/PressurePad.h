@@ -52,6 +52,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "ActiveStatus == EActiveStatus::EAS_KeyItem || ActiveStatus == EActiveStatus::EAS_Both" ))
 	class AItem* KeyItem;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item")
+	TMap<AItem*, float> ItemOnPadList;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -76,9 +79,10 @@ private:
 	FVector InitialDoorLocation;
 	FVector InitialScalePadLocation;
 	void TriggerPass();
-	void BackToUnTrigger();
+	void BackToUnTrigger(AItem* Item);
 	void CheckItem(AItem* Item);
 	void CheckWeight(AItem* Item);
 	bool bItemCorrect;
 	bool bWeightCorrect;
+	float CurrentAllItemsWeight;
 };
