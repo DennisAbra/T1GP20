@@ -24,7 +24,10 @@ public:
 	float AirControl = 5;
 
 	UPROPERTY(EditAnywhere)
-	float MaxLookRange = 65;
+	float MaxLookUpRange = 70;
+	
+	UPROPERTY(EditAnywhere)
+	float MaxLookDownRange = 90;
 
 	UPROPERTY(EditAnywhere)
 	bool bInvertLook = false;

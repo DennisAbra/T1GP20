@@ -78,7 +78,7 @@ void AFirstPersonController::LookX(float Input)
 	if (Input)
 	{
 		float CurrentPitch = FirstPersonCamera->GetRelativeRotation().Pitch + Input;
-		if (CurrentPitch < MaxLookRange && CurrentPitch > -MaxLookRange)
+		if (CurrentPitch < MaxLookUpRange && CurrentPitch > -MaxLookDownRange)
 		{
 			FirstPersonCamera->AddLocalRotation(FRotator(Input * Sensitivity, 0, 0));
 		}
