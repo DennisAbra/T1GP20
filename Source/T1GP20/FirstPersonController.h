@@ -24,10 +24,19 @@ public:
 	float AirControl = 5;
 
 	UPROPERTY(EditAnywhere)
-	float MaxLookRange = 65;
+	float MaxLookUpRange = 70;
+	
+	UPROPERTY(EditAnywhere)
+	float MaxLookDownRange = 90;
+
+	UPROPERTY(EditAnywhere)
+	float SprintTurnSlowynessMultiplyer = .5f;
 
 	UPROPERTY(EditAnywhere)
 	bool bInvertLook = false;
+
+private:
+	bool bIsSprinting = false;
 
 
 protected:
@@ -41,15 +50,18 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	UCameraComponent* FirstPersonCamera;
 private:
 	void MoveX(float Input);
 	void MoveY(float Input);
 	void LookX(float Input);
 	void LookY(float Input);
 
-	UPROPERTY(EditAnywhere, Category = "Camera")
-	UCameraComponent* FirstPersonCamera;
 
 	void Crouch();
 	void StopCrouch();
+
+	void Sprint();
+	void StopSprint();
 };

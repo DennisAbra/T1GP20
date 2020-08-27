@@ -39,14 +39,15 @@ void AFirstPersonController::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	InputComponent->BindAxis("MoveForward", this, &AFirstPersonController::MoveY);
 	InputComponent->BindAxis("Turn", this, &AFirstPersonController::LookY);
 	InputComponent->BindAxis("LookUp", this, &AFirstPersonController::LookX);
+
 	InputComponent->BindAction("Crouch", IE_Pressed, this, &AFirstPersonController::Crouch);
 	InputComponent->BindAction("Crouch", IE_Released, this, &AFirstPersonController::StopCrouch);
 
+	InputComponent->BindAction("Sprint", IE_Pressed, this, &AFirstPersonController::Sprint);
+	InputComponent->BindAction("Sprint", IE_Released, this, &AFirstPersonController::StopSprint);
+
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-
-
-	
 }
 
 
@@ -68,17 +69,14 @@ void AFirstPersonController::MoveY(float Input)
 
 void AFirstPersonController::LookX(float Input)
 {
-	if (!bInvertLook)
-	{
-		Input = -Input;
-	}
+	Input = bInvertLook ? Input : -Input;
 
 	if (Input)
 	{
 		float CurrentPitch = FirstPersonCamera->GetRelativeRotation().Pitch + Input;
-		if (CurrentPitch < MaxLookRange && CurrentPitch > -MaxLookRange)
+		if (CurrentPitch < MaxLookUpRange && CurrentPitch > -MaxLookDownRange)
 		{
-			FirstPersonCamera->AddLocalRotation(FRotator(Input, 0, 0));
+			FirstPersonCamera->AddLocalRotation(FRotator(Input * Sensitivity, 0, 0));
 		}
 	}
 }
@@ -87,18 +85,29 @@ void AFirstPersonController::LookY(float Input)
 {
 	if (Input)
 	{
-		AddActorLocalRotation(FRotator(0, Input, 0));
+		AddActorLocalRotation(FRotator(0, Input * Sensitivity, 0));
 	}
 }
 
 void AFirstPersonController::Crouch()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Crouchy crouch"));
 	GetCharacterMovement()->Crouch(true);
 }
 
 void AFirstPersonController::StopCrouch()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Stopped crouching"));
 	GetCharacterMovement()->UnCrouch(false);
+}
+
+void AFirstPersonController::Sprint()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Sprint"));
+	bIsSprinting = true;
+
+}
+
+void AFirstPersonController::StopSprint()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Stopsprint"));
+	bIsSprinting = false;
 }
