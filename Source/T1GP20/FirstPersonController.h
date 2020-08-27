@@ -41,16 +41,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	UCameraComponent* FirstPersonCamera;
 private:
 	void MoveX(float Input);
 	void MoveY(float Input);
 	void LookX(float Input);
 	void LookY(float Input);
-	
 
-
-	UPROPERTY(EditAnywhere, Category = "Camera")
-	UCameraComponent* FirstPersonCamera;
 
 	void Crouch();
 	void StopCrouch();
