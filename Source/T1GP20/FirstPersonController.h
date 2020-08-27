@@ -20,41 +20,24 @@ public:
 	UPROPERTY(EditAnywhere)
 	float Sensitivity = 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float SprintSlowSensMultiplyer = 0.15f;
-
 	UPROPERTY(EditAnywhere)
 	float AirControl = 5;
 
 	UPROPERTY(EditAnywhere)
-<<<<<<< Updated upstream
-	float MaxLookRange = 65;
-=======
 	float MaxLookUpRange = 70;
 	
 	UPROPERTY(EditAnywhere)
 	float MaxLookDownRange = 90;
->>>>>>> Stashed changes
+
+	UPROPERTY(EditAnywhere)
+	float SprintTurnSlowynessMultiplyer = .5f;
 
 	UPROPERTY(EditAnywhere)
 	bool bInvertLook = false;
 
-<<<<<<< Updated upstream
-=======
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Walkspeed = 500;
-
-
-	UPROPERTY(BlueprintReadWrite)
+private:
 	bool bIsSprinting = false;
 
-	UPROPERTY(BlueprintReadWrite)
-	bool bIsCrouching = false;
-private:
-	float Sprintspeed;
-	float CrouchSpeed;
-
->>>>>>> Stashed changes
 
 protected:
 	// Called when the game starts or when spawned
@@ -67,31 +50,18 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-<<<<<<< Updated upstream
-=======
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	UCameraComponent* FirstPersonCamera;
-	
-	
-
->>>>>>> Stashed changes
 private:
 	void MoveX(float Input);
 	void MoveY(float Input);
 	void LookX(float Input);
 	void LookY(float Input);
 
-<<<<<<< Updated upstream
-	UPROPERTY(EditAnywhere, Category = "Camera")
-	UCameraComponent* FirstPersonCamera;
 
 	void Crouch();
 	void StopCrouch();
-=======
+
 	void Sprint();
 	void StopSprint();
-	void Crouch();
-	void StopCrouch();
-
->>>>>>> Stashed changes
 };
