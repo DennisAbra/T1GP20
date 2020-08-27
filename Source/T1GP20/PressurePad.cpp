@@ -38,7 +38,7 @@ void APressurePad::BeginPlay()
 
 void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (TriggerDoor && !TriggerDoor->bIsDoorOpened && OtherActor)
+	if (TriggerDoor)
 	{
 		AItem* Object = Cast<AItem>(OtherActor);
 		if (Object)
@@ -86,13 +86,10 @@ void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 
 void APressurePad::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (TriggerDoor)
+	if (TriggerDoor && OtherActor)
 	{
-		if (OtherActor)
-		{
-			AItem* Object = Cast<AItem>(OtherActor);
-			BackToUnTrigger(Object);
-		}
+		AItem* Object = Cast<AItem>(OtherActor);
+		BackToUnTrigger(Object);
 	}
 }
 
