@@ -86,7 +86,7 @@ void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 
 void APressurePad::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (TriggerDoor && TriggerDoor->bIsDoorOpened)
+	if (TriggerDoor)
 	{
 		if (OtherActor)
 		{
