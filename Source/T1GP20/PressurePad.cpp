@@ -19,9 +19,8 @@ APressurePad::APressurePad()
 	ScalePad = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ScalePad"));
 	ScalePad->SetupAttachment(GetRootComponent());
 
-	bActiveItemCheck = false;
-	bActiveWeightCheck = false;
-
+	bItemCorrect = false;
+	bWeightCorrect = false;
 }
 
 // Called when the game starts or when spawned
@@ -37,31 +36,46 @@ void APressurePad::BeginPlay()
 
 void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (TriggerDoor && !TriggerDoor->bIsDoorOpened)
+	if (TriggerDoor && !TriggerDoor->bIsDoorOpened && OtherActor)
 	{
-		if (bActiveWeightCheck)
+		AItem* Object = Cast<AItem>(OtherActor);
+		if (Object)
 		{
-			if (OtherActor && OtherComp)
+			switch (ActiveStatus)
 			{
-				float ObjectWeight = OtherComp->GetMass();
-				if (ObjectWeight)
+			case EActiveStatus::EAS_Weight:
+				if (OtherComp)
 				{
-					if (ObjectWeight <= MaxWeightToTrigger && ObjectWeight >= MinWeightToTrigger)
+					CheckWeight(Object);
+				}
+				break;
+			case EActiveStatus::EAS_KeyItem:
+				if (OtherActor)
+				{
+					CheckItem(Object);
+				}
+				break;
+			case EActiveStatus::EAS_Both:
+				if (OtherActor && OtherComp)
+				{
+					if (!bItemCorrect)
+					{
+						CheckItem(Object);
+					}
+					if (!bWeightCorrect)
+					{
+						CheckWeight(Object);
+					}
+					if (bItemCorrect && bWeightCorrect)
 					{
 						TriggerPass();
 					}
 				}
-			}
-		}
-		else if (bActiveItemCheck)
-		{
-			if (OtherActor)
-			{
-				AItem* ObjectToTest = Cast<AItem>(OtherActor);
-				if (ObjectToTest == KeyItem)
-				{
-					TriggerPass();
-				}
+				break;
+			case EActiveStatus::EAS_MAX:
+				break;
+			default:
+				break;
 			}
 		}
 	}
@@ -108,11 +122,37 @@ void APressurePad::TriggerPass()
 void APressurePad::BackToUnTrigger()
 {
 	RaiseScalePad();
+	bItemCorrect = false;
+	bWeightCorrect = false;
 	if (TriggerDoor)
 	{
 		TriggerDoor->UpdatePressurePadStatus(this, false);
 		TriggerDoor->CloseDoor();
 		TriggerDoor->bIsDoorOpened = false;
+	}
+}
+
+void APressurePad::CheckItem(AItem* Item)
+{
+	if (Item== KeyItem)
+	{
+		bItemCorrect = true;
+		if (ActiveStatus == EActiveStatus::EAS_KeyItem)
+		TriggerPass();
+	}
+}
+
+void APressurePad::CheckWeight(AItem* Item)
+{
+	float ObjectWeight = Item->MassWeight;
+	if (ObjectWeight)
+	{
+		if (ObjectWeight <= MaxWeightToTrigger && ObjectWeight >= MinWeightToTrigger)
+		{
+			bWeightCorrect = true;
+			if (ActiveStatus == EActiveStatus::EAS_Weight)
+			TriggerPass();
+		}
 	}
 }
 

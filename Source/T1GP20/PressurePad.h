@@ -6,6 +6,15 @@
 #include "GameFramework/Actor.h"
 #include "PressurePad.generated.h"
 
+UENUM(BlueprintType)
+enum class EActiveStatus : uint8
+{
+	EAS_Weight		UMETA(DisplayName = "Weight"),
+	EAS_KeyItem		UMETA(DisplayName = "KeyItem"),
+	EAS_Both		UMETA(DisplayName = "Both"),
+
+	EAS_MAX			UMETA(DisplayName = "DefaultMax")
+};
 UCLASS()
 class T1GP20_API APressurePad : public AActor
 {
@@ -24,14 +33,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pressure Pad")
 	class UStaticMeshComponent* ScalePad;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item")
-	bool bActiveWeightCheck;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "bActiveWeightCheck"))
-	float MinWeightToTrigger;
-
-	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "bActiveWeightCheck"))
-	float MaxWeightToTrigger;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item | ParticleSystem")
 	class UParticleSystem* PassEffect;
@@ -39,10 +40,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item | Sound")
 	class USoundCue* PassSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item")
-	bool bActiveItemCheck;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PressurePad | Item")
+	EActiveStatus ActiveStatus;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "bActiveItemToCheck" ))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "ActiveStatus == EActiveStatus::EAS_Weight || ActiveStatus == EActiveStatus::EAS_Both "))
+	float MinWeightToTrigger;
+
+	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "ActiveStatus == EActiveStatus::EAS_Weight || ActiveStatus == EActiveStatus::EAS_Both"))
+	float MaxWeightToTrigger;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "ActiveStatus == EActiveStatus::EAS_KeyItem || ActiveStatus == EActiveStatus::EAS_Both" ))
 	class AItem* KeyItem;
 
 protected:
@@ -70,4 +77,8 @@ private:
 	FVector InitialScalePadLocation;
 	void TriggerPass();
 	void BackToUnTrigger();
+	void CheckItem(AItem* Item);
+	void CheckWeight(AItem* Item);
+	bool bItemCorrect;
+	bool bWeightCorrect;
 };
