@@ -40,7 +40,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item | Sound")
 	class USoundCue* PassSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PressurePad | Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item")
 	EActiveStatus ActiveStatus;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "ActiveStatus == EActiveStatus::EAS_Weight || ActiveStatus == EActiveStatus::EAS_Both "))
@@ -51,6 +51,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item", meta = (EditCondition = "ActiveStatus == EActiveStatus::EAS_KeyItem || ActiveStatus == EActiveStatus::EAS_Both" ))
 	class AItem* KeyItem;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pressure Pad | Item")
+	TMap<AItem*, float> ItemOnPadList;
+
+	UPROPERTY(VisibleAnywhere)
+	float CurrentAllItemsWeight;
 
 protected:
 	// Called when the game starts or when spawned
@@ -72,13 +78,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Pressure Pad")
 	void UpdateScalePadLocation(FVector Location);
 
+	bool CheckWeight();
+
+
+
 private:
 	FVector InitialDoorLocation;
 	FVector InitialScalePadLocation;
 	void TriggerPass();
-	void BackToUnTrigger();
+	void BackToUnTrigger(AItem* Item);
 	void CheckItem(AItem* Item);
 	void CheckWeight(AItem* Item);
 	bool bItemCorrect;
 	bool bWeightCorrect;
+
 };
