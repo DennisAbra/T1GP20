@@ -40,7 +40,7 @@ AActor* UInteracter::TriggerInteract(FTransform RayOrigin, FVector ForwardVector
 	FVector End = Start + (ForwardVector * ShootingDistance);
 	FHitResult Hit;
 
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red, true);
+	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2);
 
 	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility))
 	{
