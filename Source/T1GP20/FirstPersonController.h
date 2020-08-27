@@ -30,7 +30,13 @@ public:
 	float MaxLookDownRange = 90;
 
 	UPROPERTY(EditAnywhere)
+	float SprintTurnSlowynessMultiplyer = .5f;
+
+	UPROPERTY(EditAnywhere)
 	bool bInvertLook = false;
+
+private:
+	bool bIsSprinting = false;
 
 
 protected:
@@ -55,4 +61,7 @@ private:
 
 	void Crouch();
 	void StopCrouch();
+
+	void Sprint();
+	void StopSprint();
 };
