@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
+#include "PlayerScripts/Interactable.h"
+#include "Item.h"
 #include "FirstPersonController.generated.h"
 
 UCLASS()
@@ -18,50 +20,63 @@ public:
 	AFirstPersonController();
 
 	UPROPERTY(EditAnywhere)
-	float Sensitivity = 1;
+		float Sensitivity = 1;
 
 	UPROPERTY(EditAnywhere)
-	float AirControl = 5;
+		float AirControl = 5;
 
 	UPROPERTY(EditAnywhere)
-	float MaxLookUpRange = 70;
-	
-	UPROPERTY(EditAnywhere)
-	float MaxLookDownRange = 90;
+		float MaxLookUpRange = 70;
 
 	UPROPERTY(EditAnywhere)
-	float SprintTurnSlowynessMultiplyer = .5f;
+		float MaxLookDownRange = 90;
+
+	/*UPROPERTY(EditAnywhere)
+	float SprintTurnSlowynessMultiplyer = .5f;*/
 
 	UPROPERTY(EditAnywhere)
-	bool bInvertLook = false;
+		bool bInvertLook = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	UCameraComponent* FirstPersonCamera;
+
+	bool bCanMove;
+	bool bIsHoldingItem;
+	bool bIsInspectingItem;
+
+	//FRotator LastRotation;
 
 private:
 	bool bIsSprinting = false;
-
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+	void Interact();
+	void Inspect();
+	void StopInspect();
+
+	//void ToggleMovement();
+	//void ToggleItemPickup();
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	UCameraComponent* FirstPersonCamera;
 private:
 	void MoveX(float Input);
 	void MoveY(float Input);
 	void LookX(float Input);
 	void LookY(float Input);
 
-
-	void Crouch();
+	/*void Crouch();
 	void StopCrouch();
 
 	void Sprint();
-	void StopSprint();
+	void StopSprint();*/
+
 };
