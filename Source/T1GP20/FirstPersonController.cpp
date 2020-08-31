@@ -83,8 +83,8 @@ void AFirstPersonController::LookX(float Input)
 			FirstPersonCamera->AddLocalRotation(FRotator(Input * Sensitivity, 0, 0));
 		}
 		else if (bIsInspectingItem)
-		{
-			CurrentHeldItem->AddWorldRotation(FRotator(0, 0, Input * Sensitivity));
+		{			
+			//CurrentHeldItem->AddLocalRotation(FRotator(0, 0, Input * Sensitivity)); // nope
 		}
 	}
 
