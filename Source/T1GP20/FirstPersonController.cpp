@@ -1,10 +1,11 @@
 #include "FirstPersonController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "DrawDebugHelpers.h"
 
 
 AFirstPersonController::AFirstPersonController()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
@@ -14,20 +15,21 @@ AFirstPersonController::AFirstPersonController()
 	FirstPersonCamera->AttachTo(RootComponent);
 
 	GetCharacterMovement()->AirControl = AirControl;
+	bCanMove = true;
+	bIsInspectingItem = false;
 }
 
 // Called when the game starts or when spawned
 void AFirstPersonController::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
 void AFirstPersonController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -39,15 +41,18 @@ void AFirstPersonController::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	InputComponent->BindAxis("MoveForward", this, &AFirstPersonController::MoveY);
 	InputComponent->BindAxis("Turn", this, &AFirstPersonController::LookY);
 	InputComponent->BindAxis("LookUp", this, &AFirstPersonController::LookX);
-
-	InputComponent->BindAction("Crouch", IE_Pressed, this, &AFirstPersonController::Crouch);
-	InputComponent->BindAction("Crouch", IE_Released, this, &AFirstPersonController::StopCrouch);
-
-	InputComponent->BindAction("Sprint", IE_Pressed, this, &AFirstPersonController::Sprint);
-	InputComponent->BindAction("Sprint", IE_Released, this, &AFirstPersonController::StopSprint);
+	//InputComponent->BindAction("Interact", IE_Pressed, this, &AFirstPersonController::Interact);
+	InputComponent->BindAction("Inspect", IE_Pressed, this, &AFirstPersonController::Inspect);
+	InputComponent->BindAction("Inspect", IE_Released, this, &AFirstPersonController::StopInspect);
 
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+
+	/*InputComponent->BindAction("Crouch", IE_Pressed, this, &AFirstPersonController::Crouch);
+	InputComponent->BindAction("Crouch", IE_Released, this, &AFirstPersonController::StopCrouch);
+	InputComponent->BindAction("Sprint", IE_Pressed, this, &AFirstPersonController::Sprint);
+	InputComponent->BindAction("Sprint", IE_Released, this, &AFirstPersonController::StopSprint);*/
 }
 
 
@@ -71,7 +76,7 @@ void AFirstPersonController::LookX(float Input)
 {
 	Input = bInvertLook ? Input : -Input;
 
-	if (Input)
+	if (Input && !bIsInspectingItem)
 	{
 		float CurrentPitch = FirstPersonCamera->GetRelativeRotation().Pitch + Input;
 		if (CurrentPitch < MaxLookUpRange && CurrentPitch > -MaxLookDownRange)
@@ -83,31 +88,47 @@ void AFirstPersonController::LookX(float Input)
 
 void AFirstPersonController::LookY(float Input)
 {
-	if (Input)
+	if (Input && !bIsInspectingItem)
 	{
 		AddActorLocalRotation(FRotator(0, Input * Sensitivity, 0));
 	}
 }
 
-void AFirstPersonController::Crouch()
+void AFirstPersonController::Interact()
 {
-	GetCharacterMovement()->Crouch(true);
-}
-
-void AFirstPersonController::StopCrouch()
-{
-	GetCharacterMovement()->UnCrouch(false);
-}
-
-void AFirstPersonController::Sprint()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Sprint"));
-	bIsSprinting = true;
 
 }
 
-void AFirstPersonController::StopSprint()
+void AFirstPersonController::Inspect()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Stopsprint"));
-	bIsSprinting = false;
+	UE_LOG(LogTemp, Warning, TEXT("Inspect mode"));
+	bIsInspectingItem = true;
+
 }
+
+void AFirstPersonController::StopInspect()
+{
+	bIsInspectingItem = false;
+}
+
+//void AFirstPersonController::Crouch()
+//{
+//	GetCharacterMovement()->Crouch(true);
+//}
+//
+//void AFirstPersonController::StopCrouch()
+//{
+//	GetCharacterMovement()->UnCrouch(false);
+//}
+//
+//void AFirstPersonController::Sprint()
+//{
+//	bIsSprinting = true;
+//
+//}
+//
+//void AFirstPersonController::StopSprint()
+//{
+//	UE_LOG(LogTemp, Warning, TEXT("Stopsprint"));
+//	bIsSprinting = false;
+//}
