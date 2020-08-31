@@ -13,9 +13,10 @@ AFirstPersonController::AFirstPersonController()
 	bUseControllerRotationYaw = false;
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCamera->AttachTo(RootComponent);
+	/*HeldItemYoda = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HeldItem"));
+	HeldItemYoda->AttachTo(FirstPersonCamera);*/
 
 	GetCharacterMovement()->AirControl = AirControl;
-	bCanMove = true;
 	bIsInspectingItem = false;
 }
 
@@ -76,34 +77,40 @@ void AFirstPersonController::LookX(float Input)
 {
 	Input = bInvertLook ? Input : -Input;
 
-	if (Input && !bIsInspectingItem)
+	if (Input)
 	{
 		float CurrentPitch = FirstPersonCamera->GetRelativeRotation().Pitch + Input;
-		if (CurrentPitch < MaxLookUpRange && CurrentPitch > -MaxLookDownRange)
+
+		if (!bIsInspectingItem && CurrentPitch < MaxLookUpRange && CurrentPitch > -MaxLookDownRange)
 		{
 			FirstPersonCamera->AddLocalRotation(FRotator(Input * Sensitivity, 0, 0));
 		}
+		else if (bIsInspectingItem)
+		{
+			CurrentHeldItem->AddLocalRotation(FRotator(Input * Sensitivity, 0, 0));
+		}
 	}
+
 }
 
 void AFirstPersonController::LookY(float Input)
 {
-	if (Input && !bIsInspectingItem)
+	if (Input)
 	{
-		AddActorLocalRotation(FRotator(0, Input * Sensitivity, 0));
+		if (!bIsInspectingItem)
+		{
+			AddActorLocalRotation(FRotator(0, Input * Sensitivity, 0));
+		}
+		else if (bIsInspectingItem)
+		{
+			CurrentHeldItem->AddLocalRotation(FRotator(0, Input * Sensitivity,0 ));
+		}
 	}
-}
-
-void AFirstPersonController::Interact()
-{
-
 }
 
 void AFirstPersonController::Inspect()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Inspect mode"));
 	bIsInspectingItem = true;
-
 }
 
 void AFirstPersonController::StopInspect()

@@ -19,46 +19,51 @@ public:
 	// Sets default values for this character's properties
 	AFirstPersonController();
 
-	UPROPERTY(EditAnywhere)
-		float Sensitivity = 1;
-
-	UPROPERTY(EditAnywhere)
-		float AirControl = 5;
-
-	UPROPERTY(EditAnywhere)
-		float MaxLookUpRange = 70;
-
-	UPROPERTY(EditAnywhere)
-		float MaxLookDownRange = 90;
-
-	/*UPROPERTY(EditAnywhere)
-	float SprintTurnSlowynessMultiplyer = .5f;*/
-
-	UPROPERTY(EditAnywhere)
-		bool bInvertLook = false;
+	UPROPERTY(BlueprintReadWrite)
+	UStaticMeshComponent* CurrentHeldItem;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-		UCameraComponent* FirstPersonCamera;
+	UCameraComponent* FirstPersonCamera;
+	UPROPERTY(EditAnywhere)
+	float Sensitivity = 1;
 
-	bool bCanMove;
+	UPROPERTY(EditAnywhere)
+	float AirControl = 5;
+
+	UPROPERTY(EditAnywhere)
+	float MaxLookUpRange = 70;
+
+	UPROPERTY(EditAnywhere)
+	float MaxLookDownRange = 90;
+
+
+	UPROPERTY(EditAnywhere)
+	bool bInvertLook = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsHoldingItem;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsInspectingItem;
 
-	//FRotator LastRotation;
+	UFUNCTION(BlueprintCallable, Category = "Inspect")
+	void Inspect();
+
+	UFUNCTION(BlueprintCallable, Category = "Inspect")
+	void StopInspect();
 
 private:
 	bool bIsSprinting = false;
+	float TestRotate;
+
+	FRotator* ObjectRotation; // Remove
+	UStaticMeshComponent* HeldItem;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void Interact();
-	void Inspect();
-	void StopInspect();
-
-	//void ToggleMovement();
-	//void ToggleItemPickup();
 
 public:
 	// Called every frame
