@@ -12,10 +12,7 @@ AFirstPersonController::AFirstPersonController()
 
 	bUseControllerRotationYaw = false;
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	FirstPersonCamera->AttachTo(RootComponent);
-	/*HeldItemYoda = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HeldItem"));
-	HeldItemYoda->AttachTo(FirstPersonCamera);*/
-
+	FirstPersonCamera->SetupAttachment(GetRootComponent());
 	GetCharacterMovement()->AirControl = AirControl;
 	bIsInspectingItem = false;
 }
@@ -87,8 +84,7 @@ void AFirstPersonController::LookX(float Input)
 		}
 		else if (bIsInspectingItem)
 		{
-			//CurrentHeldItem->AddLocalRotation(FRotator(0, 0, Input * Sensitivity));
-			CurrentHeldItem->AddWorldRotation(FRotator(0, 0, Input * -Sensitivity));
+			CurrentHeldItem->AddWorldRotation(FRotator(0, 0, Input * Sensitivity));
 		}
 	}
 
@@ -104,18 +100,17 @@ void AFirstPersonController::LookY(float Input)
 		}
 		else if (bIsInspectingItem)
 		{
-			//CurrentHeldItem->AddLocalRotation(FRotator(0, 0, Input * Sensitivity));
-			//CurrentHeldItem->AddLocalRotation(FRotator(0, 0, Input * Sensitivity));
-			
-
-			CurrentHeldItem->AddWorldRotation(FRotator(0, Input * -Sensitivity, 0));
+			CurrentHeldItem->AddWorldRotation(FRotator(0, -Input * Sensitivity, 0)); // ~:)
 		}
 	}
 }
 
 void AFirstPersonController::Inspect()
 {
-	bIsInspectingItem = true;
+	if (CurrentHeldItem != nullptr)
+	{
+		bIsInspectingItem = true;
+	}
 }
 
 void AFirstPersonController::StopInspect()
