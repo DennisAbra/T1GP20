@@ -15,6 +15,9 @@ AFirstPersonController::AFirstPersonController()
 	FirstPersonCamera->SetupAttachment(GetRootComponent());
 	GetCharacterMovement()->AirControl = AirControl;
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	GetCharacterMovement()->MaxAcceleration = Acceleration;
+	GetCharacterMovement()->BrakingDecelerationWalking = 0;
+	GetCharacterMovement()->GroundFriction = 5;
 	bIsInspectingItem = false;
 }
 

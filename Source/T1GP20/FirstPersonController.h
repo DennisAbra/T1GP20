@@ -32,6 +32,9 @@ public:
 	float WalkSpeed = 275;
 
 	UPROPERTY(EditAnywhere)
+	float Acceleration = 800;
+
+	UPROPERTY(EditAnywhere)
 	float AirControl = 5;
 
 	UPROPERTY(EditAnywhere)
