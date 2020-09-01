@@ -14,6 +14,7 @@ AFirstPersonController::AFirstPersonController()
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCamera->SetupAttachment(GetRootComponent());
 	GetCharacterMovement()->AirControl = AirControl;
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	bIsInspectingItem = false;
 }
 
@@ -96,7 +97,7 @@ void AFirstPersonController::LookY(float Input)
 		}
 		else if (bIsInspectingItem)
 		{
-			CurrentHeldItem->AddLocalRotation(FRotator(0, -Input * Sensitivity, 0)); //
+			CurrentHeldItem->AddWorldRotation(FRotator(0, -Input * Sensitivity, 0));
 		}
 	}
 }
