@@ -20,7 +20,7 @@ public:
 	AFirstPersonController();
 
 	UPROPERTY(BlueprintReadWrite)
-	UStaticMeshComponent* CurrentHeldItem;
+	UStaticMeshComponent* CurrentHeldItemCpp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	UCameraComponent* FirstPersonCamera;
@@ -60,6 +60,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Inspect")
 	void StopInspect();
+
+	bool bMouseLook = true;
 
 private:
 
