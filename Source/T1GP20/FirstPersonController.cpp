@@ -76,7 +76,7 @@ void AFirstPersonController::LookX(float Input)
 	{
 		float CurrentPitch = FirstPersonCamera->GetRelativeRotation().Pitch + Input;
 
-		if (!bIsInspectingItem && CurrentPitch < MaxLookUpRange && CurrentPitch > -MaxLookDownRange)
+		if (!bIsInspectingItem && bMouseLook && CurrentPitch < MaxLookUpRange && CurrentPitch > -MaxLookDownRange)
 		{
 			FirstPersonCamera->AddLocalRotation(FRotator(Input * Sensitivity, 0, 0));
 		}
@@ -94,7 +94,7 @@ void AFirstPersonController::LookY(float Input)
 {
 	if (Input)
 	{
-		if (!bIsInspectingItem)
+		if (!bIsInspectingItem && bMouseLook)
 		{
 			AddActorLocalRotation(FRotator(0, Input * Sensitivity, 0));
 		}

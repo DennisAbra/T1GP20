@@ -61,6 +61,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inspect")
 	void StopInspect();
 
+	bool bMouseLook = true;
+
 private:
 
 	FRotator ItemParentRotation;
