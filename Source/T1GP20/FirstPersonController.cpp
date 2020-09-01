@@ -80,7 +80,7 @@ void AFirstPersonController::LookX(float Input)
 		{
 			FirstPersonCamera->AddLocalRotation(FRotator(Input * Sensitivity, 0, 0));
 		}
-		else if (bIsInspectingItem)
+		else if (bIsInspectingItem && CurrentHeldItemCpp != nullptr)
 		{
 			CurrentHeldItemCpp->GetAttachParent()->AddLocalRotation(FRotator(-Input * Sensitivity, 0, 0));
 			//CurrentHeldItem->AddLocalRotation(FRotator(0, 0, Input));
@@ -98,7 +98,7 @@ void AFirstPersonController::LookY(float Input)
 		{
 			AddActorLocalRotation(FRotator(0, Input * Sensitivity, 0));
 		}
-		else if (bIsInspectingItem)
+		else if (bIsInspectingItem && CurrentHeldItemCpp != nullptr)
 		{
 			CurrentHeldItemCpp->AddWorldRotation(FRotator(0, -Input * Sensitivity, 0));
 		}
