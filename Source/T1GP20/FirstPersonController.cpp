@@ -78,8 +78,8 @@ void AFirstPersonController::LookX(float Input)
 		}
 		else if (bIsInspectingItem)
 		{
-			//CurrentHeldItem->AddLocalRotation(FRotator(0, 0, Input * Sensitivity)); // nope
-			//CurrentHeldItem->GetAttachParent()->AddLocalRotation(FRotator(Input * Sensitivity, 0, 0));
+			CurrentHeldItem->GetAttachParent()->AddLocalRotation(FRotator(-Input * Sensitivity, 0, 0));
+			//CurrentHeldItem->AddLocalRotation(FRotator(0, 0, Input));
 			
 		}
 	}
@@ -96,7 +96,7 @@ void AFirstPersonController::LookY(float Input)
 		}
 		else if (bIsInspectingItem)
 		{
-			CurrentHeldItem->AddWorldRotation(FRotator(0, -Input * Sensitivity, 0));
+			CurrentHeldItem->AddLocalRotation(FRotator(0, -Input * Sensitivity, 0)); //
 		}
 	}
 }
