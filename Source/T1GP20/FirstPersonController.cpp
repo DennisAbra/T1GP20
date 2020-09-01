@@ -39,18 +39,12 @@ void AFirstPersonController::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	InputComponent->BindAxis("MoveForward", this, &AFirstPersonController::MoveY);
 	InputComponent->BindAxis("Turn", this, &AFirstPersonController::LookY);
 	InputComponent->BindAxis("LookUp", this, &AFirstPersonController::LookX);
-	//InputComponent->BindAction("Interact", IE_Pressed, this, &AFirstPersonController::Interact);
+
 	InputComponent->BindAction("Inspect", IE_Pressed, this, &AFirstPersonController::Inspect);
 	InputComponent->BindAction("Inspect", IE_Released, this, &AFirstPersonController::StopInspect);
 
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-
-
-	/*InputComponent->BindAction("Crouch", IE_Pressed, this, &AFirstPersonController::Crouch);
-	InputComponent->BindAction("Crouch", IE_Released, this, &AFirstPersonController::StopCrouch);
-	InputComponent->BindAction("Sprint", IE_Pressed, this, &AFirstPersonController::Sprint);
-	InputComponent->BindAction("Sprint", IE_Released, this, &AFirstPersonController::StopSprint);*/
 }
 
 
@@ -84,7 +78,9 @@ void AFirstPersonController::LookX(float Input)
 		}
 		else if (bIsInspectingItem)
 		{
-			CurrentHeldItem->AddWorldRotation(FRotator(0, 0, Input * Sensitivity));
+			CurrentHeldItem->GetAttachParent()->AddLocalRotation(FRotator(-Input * Sensitivity, 0, 0));
+			//CurrentHeldItem->AddLocalRotation(FRotator(0, 0, Input));
+			
 		}
 	}
 
@@ -100,7 +96,7 @@ void AFirstPersonController::LookY(float Input)
 		}
 		else if (bIsInspectingItem)
 		{
-			CurrentHeldItem->AddWorldRotation(FRotator(0, -Input * Sensitivity, 0)); // ~:)
+			CurrentHeldItem->AddLocalRotation(FRotator(0, -Input * Sensitivity, 0)); //
 		}
 	}
 }
@@ -110,32 +106,13 @@ void AFirstPersonController::Inspect()
 	if (CurrentHeldItem != nullptr)
 	{
 		bIsInspectingItem = true;
+		UE_LOG(LogTemp, Warning, TEXT("Inspect"));
 	}
 }
 
 void AFirstPersonController::StopInspect()
 {
 	bIsInspectingItem = false;
+	UE_LOG(LogTemp, Warning, TEXT("Stop inspect"));
+	
 }
-
-//void AFirstPersonController::Crouch()
-//{
-//	GetCharacterMovement()->Crouch(true);
-//}
-//
-//void AFirstPersonController::StopCrouch()
-//{
-//	GetCharacterMovement()->UnCrouch(false);
-//}
-//
-//void AFirstPersonController::Sprint()
-//{
-//	bIsSprinting = true;
-//
-//}
-//
-//void AFirstPersonController::StopSprint()
-//{
-//	UE_LOG(LogTemp, Warning, TEXT("Stopsprint"));
-//	bIsSprinting = false;
-//}
