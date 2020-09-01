@@ -20,7 +20,7 @@ public:
 	AFirstPersonController();
 
 	UPROPERTY(BlueprintReadWrite)
-	UStaticMeshComponent* CurrentHeldItem;
+	UStaticMeshComponent* CurrentHeldItemCpp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	UCameraComponent* FirstPersonCamera;

@@ -82,7 +82,7 @@ void AFirstPersonController::LookX(float Input)
 		}
 		else if (bIsInspectingItem)
 		{
-			CurrentHeldItem->GetAttachParent()->AddLocalRotation(FRotator(-Input * Sensitivity, 0, 0));
+			CurrentHeldItemCpp->GetAttachParent()->AddLocalRotation(FRotator(-Input * Sensitivity, 0, 0));
 			//CurrentHeldItem->AddLocalRotation(FRotator(0, 0, Input));
 			
 		}
@@ -100,14 +100,14 @@ void AFirstPersonController::LookY(float Input)
 		}
 		else if (bIsInspectingItem)
 		{
-			CurrentHeldItem->AddWorldRotation(FRotator(0, -Input * Sensitivity, 0));
+			CurrentHeldItemCpp->AddWorldRotation(FRotator(0, -Input * Sensitivity, 0));
 		}
 	}
 }
 
 void AFirstPersonController::Inspect()
 {
-	if (CurrentHeldItem != nullptr)
+	if (CurrentHeldItemCpp != nullptr)
 	{
 		bIsInspectingItem = true;
 		UE_LOG(LogTemp, Warning, TEXT("Inspect"));
