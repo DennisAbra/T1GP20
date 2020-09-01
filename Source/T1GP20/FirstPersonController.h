@@ -24,6 +24,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	UCameraComponent* FirstPersonCamera;
+
 	UPROPERTY(EditAnywhere)
 	float Sensitivity = 1;
 
@@ -36,14 +37,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	float MaxLookDownRange = 90;
 
-
 	UPROPERTY(EditAnywhere)
 	bool bInvertLook = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)
 	bool bIsHoldingItem;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)
 	bool bIsInspectingItem;
 
 	UFUNCTION(BlueprintCallable, Category = "Inspect")
@@ -53,11 +53,6 @@ public:
 	void StopInspect();
 
 private:
-	bool bIsSprinting = false;
-	float TestRotate;
-
-	FRotator* ObjectRotation; // Remove
-	UStaticMeshComponent* HeldItem;
 
 protected:
 	// Called when the game starts or when spawned
@@ -77,11 +72,5 @@ private:
 	void MoveY(float Input);
 	void LookX(float Input);
 	void LookY(float Input);
-
-	/*void Crouch();
-	void StopCrouch();
-
-	void Sprint();
-	void StopSprint();*/
 
 };
