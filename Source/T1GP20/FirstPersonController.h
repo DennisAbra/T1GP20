@@ -29,6 +29,12 @@ public:
 	float Sensitivity = 1;
 
 	UPROPERTY(EditAnywhere)
+	float WalkSpeed = 275;
+
+	UPROPERTY(EditAnywhere)
+	float Acceleration = 800;
+
+	UPROPERTY(EditAnywhere)
 	float AirControl = 5;
 
 	UPROPERTY(EditAnywhere)
@@ -39,6 +45,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	bool bInvertLook = false;
+
+	UPROPERTY(EditAnywhere)
+	bool bLocalInspectRotation = false;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsHoldingItem;
