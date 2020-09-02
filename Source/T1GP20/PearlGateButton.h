@@ -6,15 +6,6 @@
 #include "Item.h"
 #include "PearlGateButton.generated.h"
 
-UENUM(BlueprintType)
-enum class ERotationWays : uint8
-{
-	ERW_Pitch	UMETA(DisplayName = "Pitch"),
-	ERW_Yaw		UMETA(DisplayName = "Yaw"),
-	ERW_Roll	UMETA(DisplayName = "Roll"),
-
-	ERW_Max		UMETA(DisplayName = "DefaultMax")
-};
 /**
  * 
  */
@@ -29,21 +20,29 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateButton")
 	UStaticMeshComponent* PuzzleButton;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
-	ERotationWays RotateDirection;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateButton")
+	USceneComponent* PuzzleParent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
-	float DegreeToRotate;
+	float InterpSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PearlGateButton")
+	class AFirstPersonController* Player;
 protected:
 	void BeginPlay() override;
 
 public:
-	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
+	void Tick(float DeltaTime) override;
+	void Interact_Implementation() override;
+	UFUNCTION(BlueprintImplementableEvent, Category = "PearlGateButton")
+	void RotateObject();
 
-	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
-
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void MouseRedirection();
 private:
 	FVector InitialLocation;
 	FRotator InitialRotation;
+	bool bMouseLeftClickToggle;
+	bool bObjectRotationActivate;
+	void SetActivateObjectRotation(bool Active);
 };

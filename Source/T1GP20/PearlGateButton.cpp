@@ -2,53 +2,76 @@
 
 
 #include "PearlGateButton.h"
+#include "FirstPersonController.h"
+#include "Kismet/KismetMathLibrary.h"
 
 APearlGateButton::APearlGateButton()
 {
-	PuzzleButton = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PuzzleButton"));
-	PuzzleButton->SetupAttachment(GetRootComponent());
+	PuzzleParent = CreateDefaultSubobject<USceneComponent>(TEXT("PuzzleParent"));
+	PuzzleParent->SetupAttachment(GetRootComponent());
 
-	RotateDirection = ERotationWays::ERW_Pitch;
-	DegreeToRotate = -90.0f;
+	PuzzleButton = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PuzzleButton"));
+	PuzzleButton->SetupAttachment(PuzzleParent);
+
+
+	bMouseLeftClickToggle = false;
+	bObjectRotationActivate = false;
+	InterpSpeed = 1.0f;
 }
 
 void APearlGateButton::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (Player == nullptr)
+	{
+		Player = Cast<AFirstPersonController>(GetWorld()->GetFirstPlayerController());
+	}
 	InitialLocation = ObjectMesh->GetComponentLocation();
 	InitialRotation = ObjectMesh->GetComponentRotation();
 }
 
-void APearlGateButton::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void APearlGateButton::Tick(float DeltaTime)
 {
-	Super::OnOverlapBegin(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-	UE_LOG(LogTemp, Warning, TEXT("Child"));
+	if (bObjectRotationActivate && Player)
+	{
+		//RotateObject();
+		Player->bMouseLook = false;
+
+		float ValueY = (Player->GetInputAxisValue("LookUp"));
+		if (ValueY != 0)
+		{
+			PuzzleButton->AddLocalRotation(FRotator(0.0f, ValueY * InterpSpeed, 0.0f));
+		}
+
+	}
 }
 
-void APearlGateButton::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	Super::OnOverlapEnd(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
-	UE_LOG(LogTemp, Warning, TEXT("Child"));
 
+void APearlGateButton::Interact_Implementation()
+{
+	bMouseLeftClickToggle = !bMouseLeftClickToggle;
+
+	if (bMouseLeftClickToggle)
+	{
+		MouseRedirection();
+		SetActivateObjectRotation(true);
+	}
+	else
+	{
+		SetActivateObjectRotation(false);
+		if (Player)
+		{
+			Player->bMouseLook = true;
+		}
+	}
 }
 
-//void APearlGateButton::Interact_Implementation()
-//{
-//	switch (RotateDirection)
-//	{
-//	case ERotationWays::ERW_Pitch:
-//		PuzzleButton->AddLocalRotation(FRotator(DegreeToRotate, 0.0f, 0.0f));
-//		break;
-//	case ERotationWays::ERW_Yaw:
-//		PuzzleButton->AddLocalRotation(FRotator(0.0f, DegreeToRotate, 0.0f));
-//		break;
-//	case ERotationWays::ERW_Roll:
-//		PuzzleButton->AddLocalRotation(FRotator(0.0f, 0.0f, DegreeToRotate));
-//		break;
-//	case ERotationWays::ERW_Max:
-//		break;
-//	default:
-//		break;
-//	}
-//}
+
+
+void APearlGateButton::SetActivateObjectRotation(bool Active)
+{
+	bObjectRotationActivate = Active;
+}
+
+
