@@ -50,6 +50,27 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Clock")
 	int32 TimeTickingCounter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clock | Sound")
+	bool bShouldTickSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clock | Sound", meta = (EditCondition = "bShouldTickSound"))
+	class USoundCue* ClockTickingSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clock | Sound", meta = (EditCondition = "bShouldTickSound"))
+	float TickingSoundVolume;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clock | Sound")
+	bool bShouldRingBellSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clock | Sound", meta = (EditCondition = "bShouldRingBellSound"))
+	USoundCue* ClockBellSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clock | Sound", meta = (EditCondition = "bShouldRingBellSound"))
+	float BellSoundVolume;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clock | Sound", meta = (EditCondition = "bShouldRingBellSound"))
+	float SecondsToRingBellInterval;
 	
 protected:
 	// Called when the game starts or when spawned
@@ -69,4 +90,5 @@ private:
 	float SecondHandRotateDegreePerSec;
 	float MinuteHandRotateDegreePerSec;
 	float HourHandRotateDegreePerSec;
+	float RingBellCounter;
 };

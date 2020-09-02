@@ -4,6 +4,8 @@
 #include "Clock.h"
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AClock::AClock()
@@ -33,6 +35,12 @@ AClock::AClock()
 
 	MaxSecondToEndTime = 600;
 	TimeTickingCounter = 0;
+
+	bShouldTickSound = false;
+	TickingSoundVolume = 1.0f;
+	bShouldRingBellSound = false;
+	BellSoundVolume = 1.0f;
+	SecondsToRingBellInterval = 60.0f;
 }
 
 // Called when the game starts or when spawned
@@ -42,6 +50,7 @@ void AClock::BeginPlay()
 	
 	SetStartTime();
 
+	RingBellCounter = SecondsToRingBellInterval;
 }
 
 // Called every frame
@@ -49,6 +58,14 @@ void AClock::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (bShouldRingBellSound && ClockBellSound)
+	{
+		if (TimeTickingCounter >= RingBellCounter)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, ClockBellSound, GetActorLocation(), BellSoundVolume);
+			RingBellCounter += SecondsToRingBellInterval;
+		}
+	}
 	if (TimeTickingCounter >= MaxSecondToEndTime)
 	{
 		TimesUp();
@@ -78,6 +95,10 @@ void AClock::StartClockTicking(ERotateDirection Direction)
 		break;
 	default:
 		break;
+	}
+	if (bShouldTickSound && ClockTickingSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ClockTickingSound, GetActorLocation(), TickingSoundVolume);
 	}
 	TimeTickingCounter++;
 }
