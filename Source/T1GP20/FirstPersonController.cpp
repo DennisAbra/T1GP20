@@ -76,13 +76,13 @@ void AFirstPersonController::LookX(float Input)
 	{
 		float CurrentPitch = FirstPersonCamera->GetRelativeRotation().Pitch + Input;
 
-		if (!bIsInspectingItem && CurrentPitch < MaxLookUpRange && CurrentPitch > -MaxLookDownRange)
+		if (!bIsInspectingItem && bMouseLook && CurrentPitch < MaxLookUpRange && CurrentPitch > -MaxLookDownRange)
 		{
 			FirstPersonCamera->AddLocalRotation(FRotator(Input * Sensitivity, 0, 0));
 		}
-		else if (bIsInspectingItem)
+		else if (bIsInspectingItem && CurrentHeldItemCpp != nullptr)
 		{
-			CurrentHeldItem->GetAttachParent()->AddLocalRotation(FRotator(-Input * Sensitivity, 0, 0));
+			CurrentHeldItemCpp->GetAttachParent()->AddLocalRotation(FRotator(-Input * Sensitivity, 0, 0));
 			//CurrentHeldItem->AddLocalRotation(FRotator(0, 0, Input));
 			
 		}
@@ -94,20 +94,20 @@ void AFirstPersonController::LookY(float Input)
 {
 	if (Input)
 	{
-		if (!bIsInspectingItem)
+		if (!bIsInspectingItem && bMouseLook)
 		{
 			AddActorLocalRotation(FRotator(0, Input * Sensitivity, 0));
 		}
-		else if (bIsInspectingItem)
+		else if (bIsInspectingItem && CurrentHeldItemCpp != nullptr)
 		{
-			CurrentHeldItem->AddWorldRotation(FRotator(0, -Input * Sensitivity, 0));
+			CurrentHeldItemCpp->AddWorldRotation(FRotator(0, -Input * Sensitivity, 0));
 		}
 	}
 }
 
 void AFirstPersonController::Inspect()
 {
-	if (CurrentHeldItem != nullptr)
+	if (CurrentHeldItemCpp != nullptr)
 	{
 		bIsInspectingItem = true;
 		UE_LOG(LogTemp, Warning, TEXT("Inspect"));
