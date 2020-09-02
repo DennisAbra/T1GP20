@@ -4,6 +4,8 @@
 #include "PearlGateButton.h"
 #include "FirstPersonController.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "PearlGateLock.h"
+#include "TimerManager.h"
 
 APearlGateButton::APearlGateButton()
 {
@@ -43,9 +45,8 @@ void APearlGateButton::Tick(float DeltaTime)
 		float ValueY = (Player->GetInputAxisValue("LookUp"));
 		if (ValueY != 0)
 		{
-			PuzzleButton->AddLocalRotation(FRotator(0.0f, ValueY * InterpSpeed, 0.0f));
+			PuzzleButton->AddLocalRotation(FRotator(0.0f, (ValueY * InterpSpeed), 0.0f));
 		}
-
 	}
 }
 
@@ -66,6 +67,7 @@ void APearlGateButton::Interact_Implementation()
 	else
 	{
 		SetActivateObjectRotation(false);
+		EmitRotationSignal();
 		if (Player)
 		{
 			Player->bMouseLook = true;
@@ -74,6 +76,13 @@ void APearlGateButton::Interact_Implementation()
 }
 
 
+void APearlGateButton::EmitRotationSignal()
+{
+	if (PearlGateLock)
+	{
+		PearlGateLock->RotateLock(PuzzleButton->GetRelativeRotation());
+	}
+}
 
 void APearlGateButton::SetActivateObjectRotation(bool Active)
 {
