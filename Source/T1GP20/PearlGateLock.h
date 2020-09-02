@@ -16,9 +16,9 @@ public:
 	APearlGateLock();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateLock")
-	class USceneComponent* ParentLock;
+	USceneComponent* ParentLock;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateLock")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PearlGateLock")
 	class UStaticMeshComponent* LockMesh;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateLock")
@@ -27,12 +27,24 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateLock")
 	class UStaticMeshComponent* KeyMeshCheck;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock")
+	FRotator SlotRotation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock")
+	class APearlyGate* PearlyGate;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION()
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	void RotateLock(FRotator Rotation);
+
+private:
+	void SnapToRotaiton();
 };
