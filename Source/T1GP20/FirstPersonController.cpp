@@ -100,11 +100,17 @@ void AFirstPersonController::LookY(float Input)
 		{
 			if (!bCurrentItemRotateOnly)
 			{
-				CurrentHeldItemCpp->AddWorldRotation(FRotator(0, -Input * Sensitivity, 0));
+				CurrentHeldItemCpp->AddWorldRotation(FRotator(0, -Input * Sensitivity, 0)); // horizontal for held
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("I give up"));
+				/*
+				* Unparent item -> parent it to new mesh that is relative to the player, rotate it's roll to have the item roll relative to player
+				* without messing up the pitch rotation function. Then when !bCurrentItemRotateOnly, parent it to the old component again.
+				* 
+				* Untill that is fixed, use held items local roll (like below).
+				*/
+				CurrentHeldItemCpp->AddLocalRotation(FRotator(0,0, -Input * Sensitivity));
 			}
 		}
 	}
