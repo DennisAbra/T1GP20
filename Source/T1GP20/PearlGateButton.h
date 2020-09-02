@@ -28,6 +28,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PearlGateButton")
 	class AFirstPersonController* Player;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
+	bool bActive;
 protected:
 	void BeginPlay() override;
 
@@ -36,9 +39,10 @@ public:
 	void Interact_Implementation() override;
 	UFUNCTION(BlueprintImplementableEvent, Category = "PearlGateButton")
 	void RotateObject();
-
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void MouseRedirection();
+
+	FORCEINLINE void SetStatueButtonActive(bool Activate) { bActive = Activate; }
 private:
 	FVector InitialLocation;
 	FRotator InitialRotation;

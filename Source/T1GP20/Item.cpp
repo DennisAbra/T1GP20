@@ -18,7 +18,7 @@ AItem::AItem()
 	ObjectMesh->SetSimulatePhysics(true);
 
 	CollisionVolume = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionVolume"));
-	 CollisionVolume->SetupAttachment(GetRootComponent());
+	CollisionVolume->SetupAttachment(GetRootComponent());
 
 	IdleParticlesComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("IdleParticlesComponent"));
 	IdleParticlesComponent->SetupAttachment(GetRootComponent());
