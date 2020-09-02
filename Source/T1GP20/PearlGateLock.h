@@ -15,6 +15,18 @@ public:
 	// Sets default values for this actor's properties
 	APearlGateLock();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateLock")
+	class USceneComponent* ParentLock;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateLock")
+	class UStaticMeshComponent* LockMesh;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateLock")
+	class UBoxComponent* KeyCollisionBox;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateLock")
+	class UStaticMeshComponent* KeyMeshCheck;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
