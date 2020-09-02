@@ -10,6 +10,8 @@
 #include "Item.h"
 #include "FirstPersonController.generated.h"
 
+class UCameraShake;
+
 UCLASS()
 class T1GP20_API AFirstPersonController : public ACharacter
 {
@@ -71,7 +73,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	//void Interact();
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCameraShake> CamShake;
 
 public:
 	// Called every frame
@@ -80,7 +83,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable, Category = "CameraShake")
+	void ShakeItBaby();
+
 private:
+
+
 	void MoveX(float Input);
 	void MoveY(float Input);
 	void LookX(float Input);
