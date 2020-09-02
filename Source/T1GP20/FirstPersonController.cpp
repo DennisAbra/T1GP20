@@ -110,13 +110,15 @@ void AFirstPersonController::Inspect()
 	if (CurrentHeldItemCpp != nullptr)
 	{
 		bIsInspectingItem = true;
-		UE_LOG(LogTemp, Warning, TEXT("Inspect"));
 	}
 }
 
 void AFirstPersonController::StopInspect()
 {
-	bIsInspectingItem = false;
-	UE_LOG(LogTemp, Warning, TEXT("Stop inspect"));
-	
+	bIsInspectingItem = false;	
+}
+
+void AFirstPersonController::ShakeItBaby()
+{
+	GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(CamShake, 1.0f);
 }
