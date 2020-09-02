@@ -56,6 +56,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsInspectingItem;
+	
+	UPROPERTY(BlueprintReadWrite)
+	bool bCurrentItemRotateOnly = false;
 
 	UFUNCTION(BlueprintCallable, Category = "Inspect")
 	void Inspect();
@@ -87,11 +90,8 @@ public:
 	void ShakeItBaby();
 
 private:
-
-
 	void MoveX(float Input);
 	void MoveY(float Input);
 	void LookX(float Input);
 	void LookY(float Input);
-
 };
