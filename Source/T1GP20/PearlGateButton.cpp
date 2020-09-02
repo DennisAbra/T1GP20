@@ -17,6 +17,8 @@ APearlGateButton::APearlGateButton()
 	bMouseLeftClickToggle = false;
 	bObjectRotationActivate = false;
 	InterpSpeed = 1.0f;
+
+	bActive = false;
 }
 
 void APearlGateButton::BeginPlay()
@@ -25,7 +27,7 @@ void APearlGateButton::BeginPlay()
 
 	if (Player == nullptr)
 	{
-		Player = Cast<AFirstPersonController>(GetWorld()->GetFirstPlayerController());
+		Player = Cast<AFirstPersonController>(GetWorld()->GetFirstPlayerController()->GetCharacter());
 	}
 	InitialLocation = ObjectMesh->GetComponentLocation();
 	InitialRotation = ObjectMesh->GetComponentRotation();
@@ -50,6 +52,10 @@ void APearlGateButton::Tick(float DeltaTime)
 
 void APearlGateButton::Interact_Implementation()
 {
+	if (!bActive)
+	{
+		return;
+	}
 	bMouseLeftClickToggle = !bMouseLeftClickToggle;
 
 	if (bMouseLeftClickToggle)
