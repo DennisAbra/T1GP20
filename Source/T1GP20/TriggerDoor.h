@@ -15,10 +15,10 @@ public:
 	// Sets default values for this actor's properties
 	ATriggerDoor();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TriggerDoor")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CryptDoor")
 	UStaticMeshComponent* ObjectMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TriggerDoor | Sound")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CryptDoor | Sound")
 	class USoundCue* TriggerSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Trigger Door | Pressure Pad")
