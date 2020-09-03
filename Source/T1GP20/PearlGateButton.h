@@ -25,7 +25,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
 	float InterpSpeed;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PearlGateButton")
 	class AFirstPersonController* Player;
 
@@ -34,6 +34,18 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
 	bool bActive;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Sound")
+	class USoundCue* ActivatePuzzleSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Sound", meta = (EditCondition = "ActivatePuzzleSound != nullptr"))
+	float ActivateSoundVolume;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PealGateButton | Sound")
+	USoundCue* DisactivatePuzzleSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Sound", meta = (EditCondition = "DisactivatePuzzleSound != nullptr"))
+	float DisactivateSoundVolume;
 
 protected:
 	void BeginPlay() override;
