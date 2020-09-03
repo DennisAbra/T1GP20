@@ -39,60 +39,65 @@ void APressurePad::BeginPlay()
 
 void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	//CheckScale(OtherActor, OtherComp);
+}
+
+void APressurePad::CheckScale(AActor* OtherActor, UPrimitiveComponent* OtherComp)
+{
 	if (!bComplete)
-	if (TriggerDoor && OtherActor)
-	{
-		AItem* Object = Cast<AItem>(OtherActor);
-		if (Object)
+		if (CryptDoor && OtherActor)
 		{
-			switch (ActiveStatus)
+			AItem* Object = Cast<AItem>(OtherActor);
+			if (Object)
 			{
-			case EActiveStatus::EAS_Weight:
-				if (OtherComp)
+				switch (ActiveStatus)
 				{
-					CheckWeight(Object);
-				}
-				break;
-			case EActiveStatus::EAS_KeyItem:
-				if (OtherActor)
-				{
-					CheckItem(Object);
-				}
-				break;
-			case EActiveStatus::EAS_Both:
-				if (OtherActor && OtherComp)
-				{
-					if (!bItemCorrect)
-					{
-						CheckItem(Object);
-					}
-					if (!bWeightCorrect)
+				case EActiveStatus::EAS_Weight:
+					if (OtherComp)
 					{
 						CheckWeight(Object);
 					}
-					if (bItemCorrect && bWeightCorrect)
+					break;
+				case EActiveStatus::EAS_KeyItem:
+					if (OtherActor)
 					{
-						bComplete = true;
-						if(GateButton)
-						GateButton->bActive = true;
-						TriggerPass();
+						CheckItem(Object);
 					}
+					break;
+				case EActiveStatus::EAS_Both:
+					if (OtherActor && OtherComp)
+					{
+						if (!bItemCorrect)
+						{
+							CheckItem(Object);
+						}
+						if (!bWeightCorrect)
+						{
+							CheckWeight(Object);
+						}
+						if (bItemCorrect && bWeightCorrect)
+						{
+							bComplete = true;
+							if (GateButton)
+								GateButton->bActive = true;
+							TriggerPass();
+						}
+					}
+					break;
+				case EActiveStatus::EAS_MAX:
+					break;
+				default:
+					break;
 				}
-				break;
-			case EActiveStatus::EAS_MAX:
-				break;
-			default:
-				break;
 			}
 		}
-	}
 }
 
 
 void APressurePad::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (!bComplete)
-	if (TriggerDoor && OtherActor)
+	if (CryptDoor && OtherActor)
 	{
 		AItem* Object = Cast<AItem>(OtherActor);
 		BackToUnTrigger(Object);
@@ -110,9 +115,9 @@ void APressurePad::UpdateScalePadLocation(FVector Location)
 
 void APressurePad::TriggerPass()
 {
-	if (TriggerDoor && bComplete)
+	if (CryptDoor && bComplete)
 	{
-		TriggerDoor->LibraryPuzzleComplete();
+		CryptDoor->LibraryPuzzleComplete();
 	}
 
 	LowerScalePad();
@@ -140,11 +145,11 @@ void APressurePad::BackToUnTrigger(AItem* Item)
 		bItemCorrect = false;
 	}
 
-	//if (TriggerDoor)
+	//if (CryptDoor)
 	//{
-	//	TriggerDoor->UpdatePressurePadStatus(this, false);
-	//	TriggerDoor->CloseDoor();
-	//	TriggerDoor->bIsDoorOpened = false;
+	//	CryptDoor->UpdatePressurePadStatus(this, false);
+	//	CryptDoor->CloseDoor();
+	//	CryptDoor->bIsDoorOpened = false;
 	//}
 }
 
