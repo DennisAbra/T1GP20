@@ -60,14 +60,18 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bCurrentItemRotateOnly = false;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bMouseLook = true;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bCanMove = true;
+
 	UFUNCTION(BlueprintCallable, Category = "Inspect")
 	void Inspect();
 
 	UFUNCTION(BlueprintCallable, Category = "Inspect")
 	void StopInspect();
 
-	bool bMouseLook = true;
-	bool bCanMove = true;
 
 private:
 
