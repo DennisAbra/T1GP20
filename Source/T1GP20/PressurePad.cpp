@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Item.h"
 #include "CryptDoor.h"
+#include "PearlGateButton.h"
 
 // Sets default values
 APressurePad::APressurePad()
@@ -72,6 +73,8 @@ void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 					if (bItemCorrect && bWeightCorrect)
 					{
 						bComplete = true;
+						if(GateButton)
+						GateButton->bActive = true;
 						TriggerPass();
 					}
 				}
