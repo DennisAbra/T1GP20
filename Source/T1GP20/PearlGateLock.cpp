@@ -66,8 +66,7 @@ void APearlGateLock::RotateLock(FRotator Rotation)
 
 void APearlGateLock::Disappear()
 {
-	LockMesh->SetHiddenInGame(true);
-	KeyMeshCheck->SetHiddenInGame(true);
+	Destroy();
 }
 
 void APearlGateLock::SnapToRotaiton()
