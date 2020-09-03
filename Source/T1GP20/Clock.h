@@ -71,6 +71,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clock | Sound", meta = (EditCondition = "bShouldRingBellSound"))
 	float SecondsToRingBellInterval;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clock")
+	class AFirstPersonController* Player;
 	
 protected:
 	// Called when the game starts or when spawned
