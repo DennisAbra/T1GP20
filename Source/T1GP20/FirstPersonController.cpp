@@ -54,7 +54,7 @@ void AFirstPersonController::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 void AFirstPersonController::MoveX(float Input)
 {
-	if (Input)
+	if (Input && bCanMove)
 	{
 		AddMovementInput(GetActorRightVector(), Input);
 	}
@@ -62,7 +62,7 @@ void AFirstPersonController::MoveX(float Input)
 
 void AFirstPersonController::MoveY(float Input)
 {
-	if (Input)
+	if (Input && bCanMove)
 	{
 		AddMovementInput(GetActorForwardVector(), Input);
 	}

@@ -8,7 +8,7 @@
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
 #include "Item.h"
-#include "TriggerDoor.h"
+#include "CryptDoor.h"
 
 // Sets default values
 APressurePad::APressurePad()
@@ -38,6 +38,7 @@ void APressurePad::BeginPlay()
 
 void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (!bComplete)
 	if (TriggerDoor && OtherActor)
 	{
 		AItem* Object = Cast<AItem>(OtherActor);
@@ -70,6 +71,7 @@ void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 					}
 					if (bItemCorrect && bWeightCorrect)
 					{
+						bComplete = true;
 						TriggerPass();
 					}
 				}
@@ -86,6 +88,7 @@ void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 
 void APressurePad::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (!bComplete)
 	if (TriggerDoor && OtherActor)
 	{
 		AItem* Object = Cast<AItem>(OtherActor);
@@ -104,9 +107,9 @@ void APressurePad::UpdateScalePadLocation(FVector Location)
 
 void APressurePad::TriggerPass()
 {
-	if (TriggerDoor)
+	if (TriggerDoor && bComplete)
 	{
-		TriggerDoor->UpdatePressurePadStatus(this, true);
+		TriggerDoor->LibraryPuzzleComplete();
 	}
 
 	LowerScalePad();
@@ -134,12 +137,12 @@ void APressurePad::BackToUnTrigger(AItem* Item)
 		bItemCorrect = false;
 	}
 
-	if (TriggerDoor)
-	{
-		TriggerDoor->UpdatePressurePadStatus(this, false);
-		TriggerDoor->CloseDoor();
-		TriggerDoor->bIsDoorOpened = false;
-	}
+	//if (TriggerDoor)
+	//{
+	//	TriggerDoor->UpdatePressurePadStatus(this, false);
+	//	TriggerDoor->CloseDoor();
+	//	TriggerDoor->bIsDoorOpened = false;
+	//}
 }
 
 void APressurePad::CheckItem(AItem* Item)

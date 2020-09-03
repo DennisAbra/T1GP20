@@ -25,7 +25,7 @@ public:
 	APressurePad();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad")
-	class ATriggerDoor* TriggerDoor;
+	class ACryptDoor* TriggerDoor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pressure Pad")
 	class UBoxComponent* TriggerBox;
@@ -61,6 +61,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	bool bComplete = false;
 
 public:	
 	UFUNCTION()

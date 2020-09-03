@@ -67,6 +67,7 @@ public:
 	void StopInspect();
 
 	bool bMouseLook = true;
+	bool bCanMove = true;
 
 private:
 
