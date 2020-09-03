@@ -30,23 +30,28 @@ public:
 	class AFirstPersonController* Player;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
+	class APearlGateLock* PearlGateLock;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
 	bool bActive;
+
 protected:
 	void BeginPlay() override;
 
 public:
 	void Tick(float DeltaTime) override;
 	void Interact_Implementation() override;
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "PearlGateButton")
 	void RotateObject();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void MouseRedirection();
-
-	FORCEINLINE void SetStatueButtonActive(bool Activate) { bActive = Activate; }
+	
 private:
 	FVector InitialLocation;
 	FRotator InitialRotation;
 	bool bMouseLeftClickToggle;
 	bool bObjectRotationActivate;
 	void SetActivateObjectRotation(bool Active);
+	void EmitRotationSignal();
 };

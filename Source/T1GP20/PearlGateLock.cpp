@@ -2,13 +2,28 @@
 
 
 #include "PearlGateLock.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/BoxComponent.h"
+#include "PearlyGate.h"
 
 // Sets default values
 APearlGateLock::APearlGateLock()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
+	ParentLock = CreateDefaultSubobject<USceneComponent>(TEXT("ParentLock"));
+	ParentLock->SetupAttachment(GetRootComponent());
+
+	LockMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LockMesh"));
+	LockMesh->SetupAttachment(ParentLock);
+
+	KeyCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("KeyCollisionBox"));
+	KeyCollisionBox->SetupAttachment(LockMesh);
+
+	KeyMeshCheck = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KeyMeshCheck"));
+	KeyMeshCheck->SetupAttachment(GetRootComponent());
+
+	SlotRotation = FRotator(0.0f);
 }
 
 // Called when the game starts or when spawned
@@ -16,12 +31,48 @@ void APearlGateLock::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	KeyCollisionBox->OnComponentBeginOverlap.AddDynamic(this, &APearlGateLock::OnOverlapBegin);
+	KeyCollisionBox->OnComponentEndOverlap.AddDynamic(this, &APearlGateLock::OnOverlapEnd);
 }
 
-// Called every frame
-void APearlGateLock::Tick(float DeltaTime)
+void APearlGateLock::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::Tick(DeltaTime);
-
+	if (OtherComp == KeyMeshCheck)
+	{
+		SnapToRotaiton();
+	}
 }
+
+void APearlGateLock::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherComp == KeyMeshCheck)
+	{
+		if (PearlyGate)
+		{
+			PearlyGate->UpdateGateLockStatus(this, false);
+			if (PearlyGate->bGateIsOpen)
+			{
+				PearlyGate->CloseGate();
+				PearlyGate->bGateIsOpen = false;
+			}
+		}
+	}
+}
+
+void APearlGateLock::RotateLock(FRotator Rotation)
+{
+	LockMesh->SetRelativeRotation(Rotation);
+}
+
+void APearlGateLock::SnapToRotaiton()
+{
+	LockMesh->SetRelativeRotation(SlotRotation);
+
+	if (PearlyGate)
+	{
+		PearlyGate->UpdateGateLockStatus(this, true);
+	}
+}
+
+
 

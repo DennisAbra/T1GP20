@@ -70,7 +70,7 @@ public:
 
 private:
 
-	FRotator ItemParentRotation;
+	FRotator rot;
 
 protected:
 	// Called when the game starts or when spawned
