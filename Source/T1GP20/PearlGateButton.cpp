@@ -46,6 +46,7 @@ void APearlGateButton::Tick(float DeltaTime)
 	{
 		//RotateObject();
 		Player->bMouseLook = false;
+		Player->bCanMove = false;
 
 		float ValueY = (Player->GetInputAxisValue("LookUp"));
 		if (ValueY != 0)
@@ -84,6 +85,7 @@ void APearlGateButton::Interact_Implementation()
 		if (Player)
 		{
 			Player->bMouseLook = true;
+			Player->bCanMove = true;
 		}
 	}
 }
