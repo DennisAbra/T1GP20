@@ -33,6 +33,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pressure Pad")
 	class UStaticMeshComponent* ScalePad;
 
+	UPROPERTY(EditAnywhere)
+	class APearlGateButton* GateButton;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad | Item | ParticleSystem")
 	class UParticleSystem* PassEffect;
