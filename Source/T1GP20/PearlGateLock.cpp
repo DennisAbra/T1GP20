@@ -64,6 +64,12 @@ void APearlGateLock::RotateLock(FRotator Rotation)
 	LockMesh->SetRelativeRotation(Rotation);
 }
 
+void APearlGateLock::Disappear()
+{
+	LockMesh->SetHiddenInGame(true);
+	KeyMeshCheck->SetHiddenInGame(true);
+}
+
 void APearlGateLock::SnapToRotaiton()
 {
 	LockMesh->SetRelativeRotation(SlotRotation);
