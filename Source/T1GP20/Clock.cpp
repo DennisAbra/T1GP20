@@ -6,6 +6,7 @@
 #include "TimerManager.h"
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
+#include "FirstPersonController.h"
 
 // Sets default values
 AClock::AClock()
@@ -49,8 +50,11 @@ void AClock::BeginPlay()
 	Super::BeginPlay();
 	
 	SetStartTime();
-
 	RingBellCounter = SecondsToRingBellInterval;
+	if (Player == nullptr)
+	{
+		Player = Cast<AFirstPersonController>(GetWorld()->GetFirstPlayerController()->GetCharacter());
+	}
 }
 
 // Called every frame
@@ -64,6 +68,10 @@ void AClock::Tick(float DeltaTime)
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, ClockBellSound, GetActorLocation(), BellSoundVolume);
 			RingBellCounter += SecondsToRingBellInterval;
+			if (Player)
+			{
+				Player->ShakeItBaby();
+			}
 		}
 	}
 	if (TimeTickingCounter >= MaxSecondToEndTime)
