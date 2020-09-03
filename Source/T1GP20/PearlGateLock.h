@@ -44,6 +44,7 @@ public:
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	void RotateLock(FRotator Rotation);
+	void Disappear();
 
 private:
 	void SnapToRotaiton();
