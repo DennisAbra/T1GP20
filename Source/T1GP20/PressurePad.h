@@ -25,7 +25,7 @@ public:
 	APressurePad();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pressure Pad")
-	class ACryptDoor* TriggerDoor;
+	class ACryptDoor* CryptDoor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pressure Pad")
 	class UBoxComponent* TriggerBox;
@@ -65,11 +65,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(BlueprintReadOnly)
 	bool bComplete = false;
-
 public:	
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(BlueprintCallable)
+	void CheckScale(AActor* OtherActor, UPrimitiveComponent* OtherComp);
+
 
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
