@@ -51,7 +51,6 @@ public:
 
 	void UpdateGateLockStatus(APearlGateLock* Key, bool Value);
 
-	bool bPuzzleComplete;
 private:
 	FRotator InitialLeftDoorRotation;
 	FRotator InitialRightDoorRotation;

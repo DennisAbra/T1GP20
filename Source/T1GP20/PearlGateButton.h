@@ -30,10 +30,10 @@ public:
 	class AFirstPersonController* Player;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
-	class APearlGateLock* PearlGateLock;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
 	bool bActive;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Puzzle")
+	class APearlGateLock* PearlGateLock;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Sound")
 	class USoundCue* ActivatePuzzleSound;
@@ -42,10 +42,10 @@ public:
 	float ActivateSoundVolume;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Sound")
-	USoundCue* DisactivatePuzzleSound;
+	USoundCue* PuzzleCorrectSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Sound", meta = (EditCondition = "DisactivatePuzzleSound != nullptr"))
-	float DisactivateSoundVolume;
+	float CorrectSoundVolume;
 
 protected:
 	void BeginPlay() override;
@@ -60,11 +60,17 @@ public:
 	void RotateObject();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void MouseRedirection();
+
+	UFUNCTION(BlueprintCallable)
+	void SetPuzzleActivate();
 	
 private:
+	FRotator SlotRotation;
+	float AcceptableRange;
 	bool bOnOverlapping;
 	bool bMouseLeftClickToggle;
 	bool bObjectRotationActivate;
+	bool bHasPlayedCorrectSound;
 	void SetActivateObjectRotation(bool Active);
 	void EmitRotationSignal();
 	void StartInteract();

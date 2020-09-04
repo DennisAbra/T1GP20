@@ -19,61 +19,23 @@ APearlGateLock::APearlGateLock()
 	LockMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LockMesh"));
 	LockMesh->SetupAttachment(ParentLock);
 
-	KeyCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("KeyCollisionBox"));
-	KeyCollisionBox->SetupAttachment(LockMesh);
-	KeyCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	KeyCollisionBox->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
-	KeyCollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
-
-	KeyMeshCheck = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KeyMeshCheck"));
-	KeyMeshCheck->SetupAttachment(GetRootComponent());
+	KeyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KeyMeshCheck"));
+	KeyMesh->SetupAttachment(GetRootComponent());
 
 	SlotRotation = FRotator(0.0f);
-
+	AcceptableRange = 0.2f;
 	SelfDestroyDelay = 2.0f;
+
+	bIsDestroyed = false;
+	
+	UnLockSoundVolume = 1.0f;
+	DelayPlaySound = 0.5f;
 }
 
 // Called when the game starts or when spawned
 void APearlGateLock::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	KeyCollisionBox->OnComponentBeginOverlap.AddDynamic(this, &APearlGateLock::OnOverlapBegin);
-	KeyCollisionBox->OnComponentEndOverlap.AddDynamic(this, &APearlGateLock::OnOverlapEnd);
-}
-
-void APearlGateLock::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (OtherComp == KeyMeshCheck)
-	{
-		SnapToRotaiton();
-	}
-}
-
-void APearlGateLock::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	if (OtherComp == KeyMeshCheck)
-	{
-		if (PearlyGate)
-		{
-			PearlyGate->UpdateGateLockStatus(this, false);
-			if (PearlyGate->bGateIsOpen)
-			{
-				PearlyGate->CloseGate();
-				PearlyGate->bGateIsOpen = false;
-			}
-		}
-	}
-}
-
-void APearlGateLock::EnableOverlapCheck()
-{
-	KeyCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-}
-
-void APearlGateLock::DisableOverlapCheck()
-{	
-	KeyCollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
 void APearlGateLock::RotateLock(FRotator Rotation)
@@ -81,13 +43,17 @@ void APearlGateLock::RotateLock(FRotator Rotation)
 	LockMesh->SetRelativeRotation(Rotation);
 }
 
-void APearlGateLock::SnapToRotaiton()
+void APearlGateLock::CheckLockRotation()
+{
+	if ((LockMesh->GetRelativeRotation().Vector() - SlotRotation.Vector()).Size() <= AcceptableRange)
+	{
+		SnapToRotation();
+	}
+}
+
+void APearlGateLock::SnapToRotation()
 {
 	LockMesh->SetRelativeRotation(SlotRotation);
-	if (PuzzleCompleteSound)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, PuzzleCompleteSound, GetActorLocation(), CompleteSoundVolume);
-	}
 	EmitPuzzleCompleteSignal();
 }
 
@@ -97,11 +63,21 @@ void APearlGateLock::EmitPuzzleCompleteSignal()
 	{
 		PearlyGate->UpdateGateLockStatus(this, true);
 	}
+	GetWorldTimerManager().SetTimer(DelayPlaySoundTimerHandle, this, &APearlGateLock::PlayUnLockSound, DelayPlaySound);
 	GetWorldTimerManager().SetTimer(DestroyTimerHandle, this, &APearlGateLock::Disappear, SelfDestroyDelay);
+}
+
+void APearlGateLock::PlayUnLockSound()
+{
+	if (UnLockSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, UnLockSound, GetActorLocation(), UnLockSoundVolume);
+	}
 }
 
 void APearlGateLock::Disappear()
 {
+	bIsDestroyed = true;
 	Destroy();
 }
 

@@ -21,7 +21,6 @@ APearlyGate::APearlyGate()
 	RightDoorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightDoorMesh"));
 	RightDoorMesh->SetupAttachment(DoorFrameMesh);
 
-	bPuzzleComplete = false;
 }
 
 // Called when the game starts or when spawned
@@ -77,12 +76,6 @@ bool APearlyGate::CheckAllLockStatus()
 
 void APearlyGate::TriggerOpenGate()
 {
-	bPuzzleComplete = true;
-	for (auto Lock : PearlGateLockList)
-	{
-		APearlGateLock* PearlLock = Lock.Key;
-		PearlLock->Disappear();
-	}
 	OpenGate();
 	if (DoorOpenSound)
 	{

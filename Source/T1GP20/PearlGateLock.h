@@ -22,41 +22,43 @@ public:
 	class UStaticMeshComponent* LockMesh;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateLock")
-	class UBoxComponent* KeyCollisionBox;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateLock")
-	class UStaticMeshComponent* KeyMeshCheck;
+	class UStaticMeshComponent* KeyMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock")
 	FRotator SlotRotation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock")
+	float AcceptableRange;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateLock")
+	float SelfDestroyDelay;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock")
 	class APearlyGate* PearlyGate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock | Sound")
-	class USoundCue* PuzzleCompleteSound;
+	class USoundCue* UnLockSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock | Sound", meta = (EditCondition = "PuzzleCompleteSound != nullptr"))
-	float CompleteSoundVolume = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock | Sound", meta = (EditCondition = "UnLockSound != nullptr"))
+	float UnLockSoundVolume;
 
-	float SelfDestroyDelay;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock | Sound", meta = (EditCondition = "UnLockSound != nullptr"))
+	float DelayPlaySound;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	UFUNCTION()
-	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	UFUNCTION()
-	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-	void EnableOverlapCheck();
-	void DisableOverlapCheck();
 	void RotateLock(FRotator Rotation);
-	void Disappear();
+	void CheckLockRotation();
 
+	UFUNCTION()
+	void PlayUnLockSound();
 	FTimerHandle DestroyTimerHandle;
+	FTimerHandle DelayPlaySoundTimerHandle;
+	bool bIsDestroyed;
 private:
-	void SnapToRotaiton();
+	void SnapToRotation();
 	void EmitPuzzleCompleteSignal();
+	void Disappear();
 };

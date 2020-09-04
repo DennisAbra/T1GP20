@@ -17,16 +17,20 @@ APearlGateButton::APearlGateButton()
 	PuzzleButton = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PuzzleButton"));
 	PuzzleButton->SetupAttachment(PuzzleParent);
 
+	SlotRotation = FRotator(0.0f);
 	bOnOverlapping = false;
 	bMouseLeftClickToggle = false;
 	bObjectRotationActivate = false;
 
 	InterpSpeed = 1.0f;
+	AcceptableRange = 0.5f;
 
 	bActive = false;
 
 	ActivateSoundVolume = 1.0f;
-	DisactivateSoundVolume = 1.0f;
+	CorrectSoundVolume = 1.0f;
+
+	bHasPlayedCorrectSound = false;
 }
 
 void APearlGateButton::BeginPlay()
@@ -36,6 +40,11 @@ void APearlGateButton::BeginPlay()
 	PuzzleButton->OnComponentBeginOverlap.AddDynamic(this, &APearlGateButton::OnOverlapBegin);
 	PuzzleButton->OnComponentEndOverlap.AddDynamic(this, &APearlGateButton::OnOverlapEnd);
 
+	if (PearlGateLock)
+	{
+		SlotRotation = PearlGateLock->SlotRotation;
+		AcceptableRange = PearlGateLock->AcceptableRange;
+	}
 	if (Player == nullptr)
 	{
 		Player = Cast<AFirstPersonController>(GetWorld()->GetFirstPlayerController()->GetCharacter());
@@ -46,7 +55,7 @@ void APearlGateButton::Tick(float DeltaTime)
 {
 	if (bObjectRotationActivate && Player)
 	{
-		//RotateObject();
+		RotateObject();
 		Player->bMouseLook = false;
 
 		float ValueY = (Player->GetInputAxisValue("LookUp"));
@@ -60,7 +69,7 @@ void APearlGateButton::Tick(float DeltaTime)
 
 void APearlGateButton::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (PearlGateLock == nullptr)
+	if (PearlGateLock && PearlGateLock->bIsDestroyed)
 	{
 		return;
 	}
@@ -72,6 +81,10 @@ void APearlGateButton::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 
 void APearlGateButton::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (PearlGateLock && PearlGateLock->bIsDestroyed)
+	{
+		return;
+	}
 	if (OtherActor == Player)
 	{
 		bOnOverlapping = false;
@@ -84,6 +97,10 @@ void APearlGateButton::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AA
 void APearlGateButton::Interact_Implementation()
 {
 	if (!bActive)
+	{
+		return;
+	}
+	if (PearlGateLock && PearlGateLock->bIsDestroyed)
 	{
 		return;
 	}
@@ -106,45 +123,52 @@ void APearlGateButton::Interact_Implementation()
 	}
 }
 
-void APearlGateButton::EmitRotationSignal()
-{
-	if (PearlGateLock)
-	{
-		PearlGateLock->RotateLock(PuzzleButton->GetRelativeRotation());
-	}
-}
-
 void APearlGateButton::StartInteract()
 {
-	if (PearlGateLock)
-	{
-		PearlGateLock->DisableOverlapCheck();
-	}
-	if (ActivatePuzzleSound)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, ActivatePuzzleSound, GetActorLocation(), ActivateSoundVolume);
-	}
 	MouseRedirection();
 	SetActivateObjectRotation(true);
 }
 
 void APearlGateButton::FinishInteract()
 {
-	if (PearlGateLock)
-	{
-		PearlGateLock->EnableOverlapCheck();
-	}
-	if (DisactivatePuzzleSound)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, DisactivatePuzzleSound, GetActorLocation(), DisactivateSoundVolume);
-	}
 	SetActivateObjectRotation(false);
 	EmitRotationSignal();
+	if (((PuzzleButton->GetRelativeRotation().Vector() - SlotRotation.Vector()).Size() <= AcceptableRange))
+	{
+		PuzzleButton->SetRelativeRotation(SlotRotation);
+		if (PuzzleCorrectSound && !bHasPlayedCorrectSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, PuzzleCorrectSound, GetActorLocation(), CorrectSoundVolume);
+			bHasPlayedCorrectSound = true;
+		}
+	}
+	if (PearlGateLock)
+	{
+		PearlGateLock->CheckLockRotation();
+	}
+}
+
+void APearlGateButton::SetPuzzleActivate()
+{
+	bActive = true;
+	if (ActivatePuzzleSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ActivatePuzzleSound, GetActorLocation(), ActivateSoundVolume);
+	}
 }
 
 void APearlGateButton::SetActivateObjectRotation(bool Active)
 {
 	bObjectRotationActivate = Active;
+}
+
+
+void APearlGateButton::EmitRotationSignal()
+{
+	if (PearlGateLock)
+	{
+		PearlGateLock->RotateLock(PuzzleButton->GetRelativeRotation());
+	}
 }
 
 
