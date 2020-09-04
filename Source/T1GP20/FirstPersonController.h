@@ -30,7 +30,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	float Sensitivity = 1;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float WalkSpeed = 275;
 
 	UPROPERTY(EditAnywhere)
