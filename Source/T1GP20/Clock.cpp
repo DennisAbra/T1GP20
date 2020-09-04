@@ -68,6 +68,7 @@ void AClock::Tick(float DeltaTime)
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, ClockBellSound, GetActorLocation(), BellSoundVolume);
 			RingBellCounter += SecondsToRingBellInterval;
+			BellRing();
 			if (Player)
 			{
 				Player->ShakeItBaby();
