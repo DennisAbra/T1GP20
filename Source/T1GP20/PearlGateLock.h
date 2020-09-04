@@ -33,6 +33,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock")
 	class APearlyGate* PearlyGate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock | Sound")
+	class USoundCue* PuzzleCompleteSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock | Sound", meta = (EditCondition = "PuzzleCompleteSound != nullptr"))
+	float CompleteSoundVolume = 1.0f;
+
+	float SelfDestroyDelay;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -43,9 +50,13 @@ public:
 	UFUNCTION()
 	virtual void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	void EnableOverlapCheck();
+	void DisableOverlapCheck();
 	void RotateLock(FRotator Rotation);
 	void Disappear();
 
+	FTimerHandle DestroyTimerHandle;
 private:
 	void SnapToRotaiton();
+	void EmitPuzzleCompleteSignal();
 };

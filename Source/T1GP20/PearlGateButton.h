@@ -53,6 +53,8 @@ protected:
 public:
 	void Tick(float DeltaTime) override;
 	void Interact_Implementation() override;
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "PearlGateButton")
 	void RotateObject();
@@ -60,10 +62,11 @@ public:
 	void MouseRedirection();
 	
 private:
-	FVector InitialLocation;
-	FRotator InitialRotation;
+	bool bOnOverlapping;
 	bool bMouseLeftClickToggle;
 	bool bObjectRotationActivate;
 	void SetActivateObjectRotation(bool Active);
 	void EmitRotationSignal();
+	void StartInteract();
+	void FinishInteract();
 };
