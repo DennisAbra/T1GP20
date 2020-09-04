@@ -88,6 +88,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Clock")
 	void TimesUp();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Clock")
+	void BellRing();
 private:
 	void SetStartTime(); 
 	float SecondHandRotateDegreePerSec;

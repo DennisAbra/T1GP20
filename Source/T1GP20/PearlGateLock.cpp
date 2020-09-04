@@ -5,6 +5,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "PearlyGate.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APearlGateLock::APearlGateLock()
@@ -19,11 +21,16 @@ APearlGateLock::APearlGateLock()
 
 	KeyCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("KeyCollisionBox"));
 	KeyCollisionBox->SetupAttachment(LockMesh);
+	KeyCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	KeyCollisionBox->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
+	KeyCollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
 	KeyMeshCheck = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KeyMeshCheck"));
 	KeyMeshCheck->SetupAttachment(GetRootComponent());
 
 	SlotRotation = FRotator(0.0f);
+
+	SelfDestroyDelay = 2.0f;
 }
 
 // Called when the game starts or when spawned
@@ -59,25 +66,43 @@ void APearlGateLock::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AAct
 	}
 }
 
+void APearlGateLock::EnableOverlapCheck()
+{
+	KeyCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void APearlGateLock::DisableOverlapCheck()
+{	
+	KeyCollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
 void APearlGateLock::RotateLock(FRotator Rotation)
 {
 	LockMesh->SetRelativeRotation(Rotation);
+}
+
+void APearlGateLock::SnapToRotaiton()
+{
+	LockMesh->SetRelativeRotation(SlotRotation);
+	if (PuzzleCompleteSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, PuzzleCompleteSound, GetActorLocation(), CompleteSoundVolume);
+	}
+	EmitPuzzleCompleteSignal();
+}
+
+void APearlGateLock::EmitPuzzleCompleteSignal()
+{
+	if (PearlyGate)
+	{
+		PearlyGate->UpdateGateLockStatus(this, true);
+	}
+	GetWorldTimerManager().SetTimer(DestroyTimerHandle, this, &APearlGateLock::Disappear, SelfDestroyDelay);
 }
 
 void APearlGateLock::Disappear()
 {
 	Destroy();
 }
-
-void APearlGateLock::SnapToRotaiton()
-{
-	LockMesh->SetRelativeRotation(SlotRotation);
-
-	if (PearlyGate)
-	{
-		PearlyGate->UpdateGateLockStatus(this, true);
-	}
-}
-
 
 
