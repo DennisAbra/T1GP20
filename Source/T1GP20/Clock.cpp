@@ -19,14 +19,23 @@ AClock::AClock()
 	ClockMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ClockMesh"));
 	ClockMesh->SetupAttachment(GetRootComponent());
 
+	HourHandParent = CreateDefaultSubobject<USceneComponent>(TEXT("HourHandParent"));
+	HourHandParent->SetupAttachment(ClockMesh);
+
 	HourHandMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HourHandMesh"));
-	HourHandMesh->SetupAttachment(ClockMesh);
+	HourHandMesh->SetupAttachment(HourHandParent);
 	
+	MinuteHandParent = CreateDefaultSubobject<USceneComponent>(TEXT("MinuteHandParent"));
+	MinuteHandParent->SetupAttachment(ClockMesh);
+
 	MinuteHandMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MinuteHandMesh"));
-	MinuteHandMesh->SetupAttachment(ClockMesh);
+	MinuteHandMesh->SetupAttachment(MinuteHandParent);
+
+	SecondHandParent = CreateDefaultSubobject<USceneComponent>(TEXT("SecondHandParent"));
+	SecondHandParent->SetupAttachment(ClockMesh);
 
 	SecondHandMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SecondHandMesh"));
-	SecondHandMesh->SetupAttachment(ClockMesh);
+	SecondHandMesh->SetupAttachment(SecondHandParent);
 
 	RotateDirection = ERotateDirection::ERD_Yaw;
 	 
@@ -86,19 +95,19 @@ void AClock::StartClockTicking(ERotateDirection Direction)
 	switch (Direction)
 	{
 	case ERotateDirection::ERD_Pitch:
-		SecondHandMesh->AddLocalRotation(FRotator(-SecondHandRotateDegreePerSec, 0.0f, 0.0f));
-		MinuteHandMesh->AddLocalRotation(FRotator(-MinuteHandRotateDegreePerSec, 0.0f, 0.0f));
-		HourHandMesh->AddLocalRotation(FRotator(-HourHandRotateDegreePerSec, 0.0f, 0.0f));
+		SecondHandParent->AddLocalRotation(FRotator(SecondHandRotateDegreePerSec, 0.0f, 0.0f));
+		MinuteHandParent->AddLocalRotation(FRotator(MinuteHandRotateDegreePerSec, 0.0f, 0.0f));
+		HourHandParent->AddLocalRotation(FRotator(HourHandRotateDegreePerSec, 0.0f, 0.0f));
 		break;
 	case ERotateDirection::ERD_Yaw:
-		SecondHandMesh->AddLocalRotation(FRotator(0.0f, SecondHandRotateDegreePerSec, 0.0f));
-		MinuteHandMesh->AddLocalRotation(FRotator(0.0f, MinuteHandRotateDegreePerSec, 0.0f));
-		HourHandMesh->AddLocalRotation(FRotator(0.0f, HourHandRotateDegreePerSec, 0.0f));
+		SecondHandParent->AddLocalRotation(FRotator(0.0f, SecondHandRotateDegreePerSec, 0.0f));
+		MinuteHandParent->AddLocalRotation(FRotator(0.0f, MinuteHandRotateDegreePerSec, 0.0f));
+		HourHandParent->AddLocalRotation(FRotator(0.0f, HourHandRotateDegreePerSec, 0.0f));
 		break;
 	case ERotateDirection::ERD_Roll:
-		SecondHandMesh->AddLocalRotation(FRotator(0.0f, 0.0f, SecondHandRotateDegreePerSec));
-		MinuteHandMesh->AddLocalRotation(FRotator(0.0f, 0.0f, MinuteHandRotateDegreePerSec));
-		HourHandMesh->AddLocalRotation(FRotator(0.0f, 0.0f, HourHandRotateDegreePerSec));
+		SecondHandParent->AddLocalRotation(FRotator(0.0f, 0.0f, SecondHandRotateDegreePerSec));
+		MinuteHandParent->AddLocalRotation(FRotator(0.0f, 0.0f, MinuteHandRotateDegreePerSec));
+		HourHandParent->AddLocalRotation(FRotator(0.0f, 0.0f, HourHandRotateDegreePerSec));
 		break;
 	case ERotateDirection::ERD_Max:
 		break;
@@ -123,27 +132,26 @@ void AClock::SetStartTime()
 	switch (RotateDirection)
 	{
 	case ERotateDirection::ERD_Pitch:
-		HourHandRotation.Pitch = (float)(StartHour * HourScale) + (float)(StartMinute * HourScale / 60);
-		HourHandMesh->SetRelativeRotation(HourHandRotation);
+		HourHandRotation.Pitch = -((float)(StartHour * HourScale) + (float)(StartMinute * HourScale / 60));
+		HourHandParent->AddLocalRotation(HourHandRotation);
 
-		MinHandRotation.Pitch = (float)(StartMinute * MinSacle);
-		MinuteHandMesh->SetRelativeRotation(MinHandRotation);
+		MinHandRotation.Pitch = -((float)(StartMinute * MinSacle));
+		MinuteHandParent->AddLocalRotation(MinHandRotation);
 
 		break;
 	case ERotateDirection::ERD_Yaw:
 		HourHandRotation.Yaw = (float)(StartHour * HourScale) + (float)(StartMinute * HourScale / 60);
-		HourHandMesh->SetRelativeRotation(HourHandRotation);
+		HourHandParent->AddLocalRotation(HourHandRotation);
 
 		MinHandRotation.Yaw = (float)(StartMinute * MinSacle);
-		MinuteHandMesh->SetRelativeRotation(MinHandRotation);
+		MinuteHandParent->AddLocalRotation(MinHandRotation);
 		break;
 	case ERotateDirection::ERD_Roll:
 		HourHandRotation.Roll = (float)(StartHour * HourScale) + (float)(StartMinute * HourScale / 60);
-		HourHandMesh->SetRelativeRotation(HourHandRotation);
+		HourHandParent->AddLocalRotation(HourHandRotation);
 
 		MinHandRotation.Roll = (float)(StartMinute * MinSacle);
-		MinuteHandMesh->SetRelativeRotation(MinHandRotation);
-
+		MinuteHandParent->AddLocalRotation(MinHandRotation);
 		break;
 	case ERotateDirection::ERD_Max:
 		break;

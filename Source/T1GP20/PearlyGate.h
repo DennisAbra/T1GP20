@@ -24,16 +24,16 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlyGate")
 	UStaticMeshComponent* RightDoorMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGate")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlyGate")
 	TMap<class APearlGateLock*, bool> PearlGateLockList;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock")
-	bool bGateIsOpen;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlyGate")
+	float DelayOpenGate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGate | Sound")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlyGate | Sound")
 	class USoundCue* DoorOpenSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGate | Sound")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlyGate | Sound")
 	USoundCue* DoorCloseSound;
 protected:
 	// Called when the game starts or when spawned
@@ -51,9 +51,11 @@ public:
 
 	void UpdateGateLockStatus(APearlGateLock* Key, bool Value);
 
+	UFUNCTION()
+	void TriggerOpenGate();
+	FTimerHandle OpenGateTimerHandle;
 private:
 	FRotator InitialLeftDoorRotation;
 	FRotator InitialRightDoorRotation;
 	bool CheckAllLockStatus();
-	void TriggerOpenGate();
 };

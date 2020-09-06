@@ -8,6 +8,7 @@
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
+#include "Components/AudioComponent.h"
 
 APearlGateButton::APearlGateButton()
 {
@@ -16,6 +17,8 @@ APearlGateButton::APearlGateButton()
 
 	PuzzleButton = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PuzzleButton"));
 	PuzzleButton->SetupAttachment(PuzzleParent);
+
+	PuzzleAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
 
 	SlotRotation = FRotator(0.0f);
 	bOnOverlapping = false;
@@ -28,6 +31,7 @@ APearlGateButton::APearlGateButton()
 	bActive = false;
 
 	ActivateSoundVolume = 1.0f;
+	RollingSoundVolume = 1.0f;
 	CorrectSoundVolume = 1.0f;
 
 	bHasPlayedCorrectSound = false;
@@ -62,7 +66,27 @@ void APearlGateButton::Tick(float DeltaTime)
 		if (ValueY != 0)
 		{
 			PuzzleButton->AddLocalRotation(FRotator(0.0f, (ValueY * InterpSpeed), 0.0f));
+			if (RollingSound)
+			{
+				if (!PuzzleAudioComponent->IsPlaying())
+				{
+					PuzzleAudioComponent->SetSound(RollingSound);
+					PuzzleAudioComponent->SetVolumeMultiplier(RollingSoundVolume);
+					PuzzleAudioComponent->Play(0.0f);
+				}
+				else if (PuzzleAudioComponent->bIsPaused)
+				{
+					PuzzleAudioComponent->SetPaused(false);
+				}
+			}
 			EmitRotationSignal();
+		}
+		else
+		{
+			if (PuzzleAudioComponent->IsPlaying())
+			{
+				PuzzleAudioComponent->SetPaused(true);
+			}
 		}
 	}
 }

@@ -28,10 +28,19 @@ public:
 	class UStaticMeshComponent* ClockMesh;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Clock")
+	USceneComponent* HourHandParent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Clock")
 	UStaticMeshComponent* HourHandMesh;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Clock")
+	USceneComponent* MinuteHandParent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Clock")
 	UStaticMeshComponent* MinuteHandMesh;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Clock")
+	USceneComponent* SecondHandParent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Clock")
 	UStaticMeshComponent* SecondHandMesh;

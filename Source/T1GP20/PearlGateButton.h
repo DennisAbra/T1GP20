@@ -23,6 +23,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateButton")
 	USceneComponent* PuzzleParent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateButton")
+	class UAudioComponent* PuzzleAudioComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
 	float InterpSpeed;
 	
@@ -40,6 +43,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Sound", meta = (EditCondition = "ActivatePuzzleSound != nullptr"))
 	float ActivateSoundVolume;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Sound")
+	USoundCue* RollingSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Sound", meta = (EditCondition = "RollingSound != nullptr"))
+	float RollingSoundVolume;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Sound")
 	USoundCue* PuzzleCorrectSound;

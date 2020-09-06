@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 #include "PearlGateLock.h"
+#include "TimerManager.h"
 
 // Sets default values
 APearlyGate::APearlyGate()
@@ -21,6 +22,7 @@ APearlyGate::APearlyGate()
 	RightDoorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightDoorMesh"));
 	RightDoorMesh->SetupAttachment(DoorFrameMesh);
 
+	DelayOpenGate = 0.5f;
 }
 
 // Called when the game starts or when spawned
@@ -47,13 +49,17 @@ void APearlyGate::UpdateGateLockStatus(APearlGateLock* Key, bool Value)
 {
 	if (PearlGateLockList.Num() > 0)
 	{
-		PearlGateLockList[Key] = Value;
-	}
-	if (Value == true)
-	{
-		if (CheckAllLockStatus())
+		if (PearlGateLockList.Contains(Key))
 		{
-			TriggerOpenGate();
+			PearlGateLockList[Key] = Value;
+
+			if (Value == true)
+			{
+				if (CheckAllLockStatus())
+				{
+					GetWorldTimerManager().SetTimer(OpenGateTimerHandle, this, &APearlyGate::TriggerOpenGate, DelayOpenGate);
+				}
+			}
 		}
 	}
 }
@@ -81,7 +87,6 @@ void APearlyGate::TriggerOpenGate()
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, DoorOpenSound, GetActorLocation());
 	}
-	bGateIsOpen = true;
 }
 
 

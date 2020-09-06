@@ -24,7 +24,7 @@ APearlGateLock::APearlGateLock()
 
 	SlotRotation = FRotator(0.0f);
 	AcceptableRange = 0.2f;
-	SelfDestroyDelay = 2.0f;
+	SelfDestroyDelay = 1.0f;
 
 	bIsDestroyed = false;
 	
