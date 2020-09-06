@@ -30,7 +30,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock")
 	float AcceptableRange;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateLock")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock")
 	float SelfDestroyDelay;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateLock")

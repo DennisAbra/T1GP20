@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 #include "Components/AudioComponent.h"
+#include "Engine/World.h"
 
 APearlGateButton::APearlGateButton()
 {
@@ -19,6 +20,7 @@ APearlGateButton::APearlGateButton()
 	PuzzleButton->SetupAttachment(PuzzleParent);
 
 	PuzzleAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	PuzzleAudioComponent->SetupAttachment(GetRootComponent());
 
 	SlotRotation = FRotator(0.0f);
 	bOnOverlapping = false;
@@ -60,7 +62,7 @@ void APearlGateButton::Tick(float DeltaTime)
 	if (bObjectRotationActivate && Player)
 	{
 		RotateObject();
-		Player->bMouseLook = false;
+		/*Player->bMouseLook = false;
 
 		float ValueY = (Player->GetInputAxisValue("LookUp"));
 		if (ValueY != 0)
@@ -87,7 +89,7 @@ void APearlGateButton::Tick(float DeltaTime)
 			{
 				PuzzleAudioComponent->SetPaused(true);
 			}
-		}
+		}*/
 	}
 }
 
@@ -149,7 +151,6 @@ void APearlGateButton::Interact_Implementation()
 
 void APearlGateButton::StartInteract()
 {
-	MouseRedirection();
 	SetActivateObjectRotation(true);
 }
 
@@ -181,6 +182,113 @@ void APearlGateButton::SetPuzzleActivate()
 	}
 }
 
+int32 APearlGateButton::GetRotationIncrement(FVector HitLocation, FVector2D MouseInputValue)
+{
+	if (HitLocation.X == 0 && HitLocation.Z == 0)
+	{
+		return 0;
+	}
+	// Diagonals movement
+	if (MouseInputValue.X > 0 && MouseInputValue.Y > 0)
+	{
+		if (HitLocation.X < 0 && HitLocation.Z > 0)
+		{
+			return 1;
+		}
+		if (HitLocation.X > 0 && HitLocation.Z < 0)
+		{
+			return -1;
+		}
+		return 0;
+	}
+	if (MouseInputValue.X > 0 && MouseInputValue.Y < 0)
+	{
+		if (HitLocation.X > 0 && HitLocation.Z > 0)
+		{
+			return 1;
+		}
+		if (HitLocation.X < 0 && HitLocation.Z < 0)
+		{
+			return -1;
+		}
+		return 0;
+	}
+	if (MouseInputValue.X < 0 && MouseInputValue.Y < 0)
+	{
+		if (HitLocation.X < 0 && HitLocation.Z > 0)
+		{
+			return -1;
+		}
+		if (HitLocation.X > 0 && HitLocation.Z < 0)
+		{
+			return 1;
+		}
+		return 0;
+	}
+	if (MouseInputValue.X < 0 && MouseInputValue.Y > 0)
+	{
+		if (HitLocation.X > 0 && HitLocation.Z > 0)
+		{
+			return -1;
+		}
+		if (HitLocation.X < 0 && HitLocation.Z < 0)
+		{
+			return 1;
+		}
+		return 0;
+	}
+	// Straights movement
+	if (MouseInputValue.X > 0 && MouseInputValue.Y == 0)
+	{
+		if (HitLocation.Z > 0)
+		{
+			return 1;
+		}
+		if (HitLocation.Z < 0)
+		{
+			return -1;
+		}
+		return 0;
+	}
+	if (MouseInputValue.X < 0 && MouseInputValue.Y == 0)
+	{
+		if (HitLocation.Z > 0)
+		{
+			return -1;
+		}
+		if (HitLocation.Z < 0)
+		{
+			return 1;
+		}
+		return 0;
+	}
+	if (MouseInputValue.X == 0 && MouseInputValue.Y > 0)
+	{
+		if (HitLocation.X < 0)
+		{
+			return 1;
+		}
+		if (HitLocation.X > 0)
+		{
+			return -1;
+		}
+		return 0;
+	}
+	if (MouseInputValue.X == 0 && MouseInputValue.Y < 0)
+	{
+		if (HitLocation.X < 0)
+		{
+			return -1;
+		}
+		if (HitLocation.X > 0)
+		{
+			return 1;
+		}
+		return 0;
+	}
+	return 0;
+}
+
 void APearlGateButton::SetActivateObjectRotation(bool Active)
 {
 	bObjectRotationActivate = Active;
@@ -192,6 +300,27 @@ void APearlGateButton::EmitRotationSignal()
 	if (PearlGateLock)
 	{
 		PearlGateLock->RotateLock(PuzzleButton->GetRelativeRotation());
+	}
+}
+
+void APearlGateButton::PlayRollingSound()
+{
+	if (RollingSound)
+	{
+		if (!PuzzleAudioComponent->IsActive())
+		{
+			PuzzleAudioComponent->SetSound(RollingSound);
+			PuzzleAudioComponent->SetVolumeMultiplier(RollingSoundVolume);
+			PuzzleAudioComponent->Play(0.0f);
+		}
+	}
+}
+
+void APearlGateButton::StopPlayRollingSound()
+{
+	if (PuzzleAudioComponent->IsPlaying())
+	{
+		PuzzleAudioComponent->Stop();
 	}
 }
 

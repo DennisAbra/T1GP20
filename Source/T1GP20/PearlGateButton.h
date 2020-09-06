@@ -67,12 +67,18 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "PearlGateButton")
 	void RotateObject();
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void MouseRedirection();
 
 	UFUNCTION(BlueprintCallable)
 	void SetPuzzleActivate();
-	
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetRotationIncrement(FVector HitLocation, FVector2D MouseInputValue);
+	UFUNCTION(BlueprintCallable)
+	void EmitRotationSignal();
+	UFUNCTION(BlueprintCallable)
+	void PlayRollingSound();
+	UFUNCTION(BlueprintCallable)
+	void StopPlayRollingSound();
 private:
 	FRotator SlotRotation;
 	float AcceptableRange;
@@ -81,7 +87,7 @@ private:
 	bool bObjectRotationActivate;
 	bool bHasPlayedCorrectSound;
 	void SetActivateObjectRotation(bool Active);
-	void EmitRotationSignal();
+	
 	void StartInteract();
 	void FinishInteract();
 };
