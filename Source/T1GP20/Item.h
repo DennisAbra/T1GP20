@@ -44,6 +44,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Other")
 	bool bDefaultRotationOnPickup;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Other")
+	bool bOffCenterHoldingPos;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
