@@ -69,7 +69,7 @@ public:
 	void RotateObject();
 
 	UFUNCTION(BlueprintCallable)
-	void SetPuzzleActivate();
+	void SetPuzzleActivate(bool Value);
 
 	UFUNCTION(BlueprintCallable)
 	int32 GetRotationIncrement(FVector HitLocation, FVector2D MouseInputValue);

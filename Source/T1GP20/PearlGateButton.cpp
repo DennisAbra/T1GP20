@@ -173,12 +173,15 @@ void APearlGateButton::FinishInteract()
 	}
 }
 
-void APearlGateButton::SetPuzzleActivate()
+void APearlGateButton::SetPuzzleActivate(bool Value)
 {
-	bActive = true;
-	if (ActivatePuzzleSound)
+	bActive = Value;
+	if (bActive)
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, ActivatePuzzleSound, GetActorLocation(), ActivateSoundVolume);
+		if (ActivatePuzzleSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, ActivatePuzzleSound, GetActorLocation(), ActivateSoundVolume);
+		}
 	}
 }
 
@@ -307,7 +310,7 @@ void APearlGateButton::PlayRollingSound()
 {
 	if (RollingSound)
 	{
-		if (!PuzzleAudioComponent->IsActive())
+		if (!PuzzleAudioComponent->IsActive() && !PuzzleAudioComponent->IsPlaying())
 		{
 			PuzzleAudioComponent->SetSound(RollingSound);
 			PuzzleAudioComponent->SetVolumeMultiplier(RollingSoundVolume);
