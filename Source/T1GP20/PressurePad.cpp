@@ -10,6 +10,7 @@
 #include "Item.h"
 #include "CryptDoor.h"
 #include "PearlGateButton.h"
+#include "TimerManager.h"
 
 // Sets default values
 APressurePad::APressurePad()
@@ -24,6 +25,8 @@ APressurePad::APressurePad()
 	bWeightCorrect = false;
 
 	CurrentAllItemsWeight = 0.0f;
+
+	DelayToCallPuzzle = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -78,8 +81,7 @@ void APressurePad::CheckScale(AActor* OtherActor, UPrimitiveComponent* OtherComp
 						if (bItemCorrect && bWeightCorrect)
 						{
 							bComplete = true;
-							if (GateButton)
-								GateButton->bActive = true;
+							GetWorldTimerManager().SetTimer(PuzzleTimerHandle, this, &APressurePad::CallPuzzleActivate, DelayToCallPuzzle);
 							TriggerPass();
 						}
 					}
@@ -179,6 +181,14 @@ bool APressurePad::CheckWeight()
 		return true;
 	}
 	else return false;
+}
+
+void APressurePad::CallPuzzleActivate()
+{
+	if (GateButton)
+	{
+		GateButton->SetPuzzleActivate(true);
+	}
 }
 
 void APressurePad::CheckWeight(AItem* Item)

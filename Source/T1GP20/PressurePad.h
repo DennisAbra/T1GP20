@@ -61,6 +61,8 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	float CurrentAllItemsWeight;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PressurePad | Item")
+	float DelayToCallPuzzle;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -89,8 +91,10 @@ public:
 
 	bool CheckWeight();
 
+	UFUNCTION()
+	void CallPuzzleActivate();
 
-
+	FTimerHandle PuzzleTimerHandle;
 private:
 	FVector InitialDoorLocation;
 	FVector InitialScalePadLocation;
