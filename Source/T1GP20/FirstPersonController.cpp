@@ -66,7 +66,14 @@ void AFirstPersonController::MoveY(float Input)
 	{
 		AddMovementInput(GetActorForwardVector(), Input);
 	}
+	else
+	{
+		BoostStart(); // why not the other way around
+		GetCharacterMovement()->MaxAcceleration = Acceleration;
+		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	}
 }
+
 
 void AFirstPersonController::LookX(float Input)
 {
@@ -126,4 +133,18 @@ void AFirstPersonController::StopInspect()
 void AFirstPersonController::ShakeItBaby()
 {
 	GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(CamShake, 1.0f);
+}
+
+void AFirstPersonController::BoostStart()
+{
+	// Start the boost thing
+	GetWorld()->GetTimerManager().SetTimer(TimeUntilBoostHandle, this, &AFirstPersonController::BoostIncrease, TimeUntilSprint, false);
+}
+
+void AFirstPersonController::BoostIncrease()
+{
+	GetCharacterMovement()->MaxAcceleration = Acceleration * SprintAcceleration;
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed * WalkSpeedMultiplyer;
+
+	
 }

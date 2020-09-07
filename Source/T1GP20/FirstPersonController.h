@@ -18,7 +18,6 @@ class T1GP20_API AFirstPersonController : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	AFirstPersonController();
 
 	UPROPERTY(BlueprintReadWrite)
@@ -27,29 +26,35 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	UCameraComponent* FirstPersonCamera;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Settings | Mouse")
 	float Sensitivity = 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float WalkSpeed = 275;
-
-	UPROPERTY(EditAnywhere)
-	float Acceleration = 800;
-
-	UPROPERTY(EditAnywhere)
-	float AirControl = 5;
-
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Settings | Mouse")
 	float MaxLookUpRange = 70;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Settings | Mouse")
 	float MaxLookDownRange = 90;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Settings | Mouse")
 	bool bInvertLook = false;
 
-	UPROPERTY(EditAnywhere)
-	bool bLocalInspectRotation = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings | MovementStuff")
+	float WalkSpeed = 275;
+
+	UPROPERTY(EditAnywhere, Category = "Settings | MovementStuff")
+	float Acceleration = 800;
+
+	UPROPERTY(EditAnywhere, Category = "Settings | MovementStuff")
+	float AirControl = 5;
+
+	UPROPERTY(EditAnywhere, Category = "Settings | AutoSprint")
+	float TimeUntilSprint = 3;
+
+	UPROPERTY(EditAnywhere, Category = "Settings | AutoSprint")
+	float WalkSpeedMultiplyer = 2.5;
+
+	UPROPERTY(EditAnywhere, Category = "Settings | AutoSprint")
+	float SprintAcceleration = 0.5;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsHoldingItem;
@@ -75,26 +80,26 @@ public:
 
 private:
 
-	FRotator rot;
-
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UCameraShake> CamShake;
 
 public:
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable, Category = "CameraShake")
 	void ShakeItBaby();
 
 private:
+	FTimerHandle TimeUntilBoostHandle;
+
+	void BoostStart();
+	void BoostIncrease();
+
 	void MoveX(float Input);
 	void MoveY(float Input);
 	void LookX(float Input);
