@@ -65,6 +65,7 @@ void APearlGateButton::Tick(float DeltaTime)
 	if (bObjectRotationActivate && Player)
 	{
 		RotateObject();
+		// Rotate object with locked camera view
 		/*Player->bMouseLook = false;
 
 		float ValueY = (Player->GetInputAxisValue("LookUp"));
@@ -131,6 +132,7 @@ void APearlGateButton::Interact_Implementation()
 	}
 	if (PearlGateLock && PearlGateLock->bIsDestroyed)
 	{
+		SetActivateObjectRotation(false);
 		return;
 	}
 	if (bOnOverlapping)
