@@ -27,6 +27,8 @@ APearlGateButton::APearlGateButton()
 	bMouseLeftClickToggle = false;
 	bObjectRotationActivate = false;
 
+	FaceDirection = EFaceDirection::EFD_Front;
+
 	InterpSpeed = 1.0f;
 	AcceptableRange = 0.5f;
 
@@ -48,6 +50,7 @@ void APearlGateButton::BeginPlay()
 
 	if (PearlGateLock)
 	{
+		PuzzleButton->SetRelativeRotation(PearlGateLock->LockMesh->GetRelativeRotation());
 		SlotRotation = PearlGateLock->SlotRotation;
 		AcceptableRange = PearlGateLock->AcceptableRange;
 	}
@@ -62,6 +65,7 @@ void APearlGateButton::Tick(float DeltaTime)
 	if (bObjectRotationActivate && Player)
 	{
 		RotateObject();
+		// Rotate object with locked camera view
 		/*Player->bMouseLook = false;
 
 		float ValueY = (Player->GetInputAxisValue("LookUp"));
@@ -128,6 +132,7 @@ void APearlGateButton::Interact_Implementation()
 	}
 	if (PearlGateLock && PearlGateLock->bIsDestroyed)
 	{
+		SetActivateObjectRotation(false);
 		return;
 	}
 	if (bOnOverlapping)
@@ -185,20 +190,35 @@ void APearlGateButton::SetPuzzleActivate(bool Value)
 	}
 }
 
-int32 APearlGateButton::GetRotationIncrement(FVector HitLocation, FVector2D MouseInputValue)
+int32 APearlGateButton::GetRotationIncrement(EFaceDirection Direction, FVector HitLocation, FVector2D MouseInputValue)
 {
-	if (HitLocation.X == 0 && HitLocation.Z == 0)
+	if (HitLocation.X == 0 && HitLocation.Z == 0 && HitLocation.Y == 0)
 	{
 		return 0;
 	}
+	float HorizontalPlace = HitLocation.X;
+
+	switch (Direction)
+	{
+	case EFaceDirection::EFD_Rright:
+		HorizontalPlace = HitLocation.Y;
+		break;
+	case EFaceDirection::EFD_Left:
+		HorizontalPlace = HitLocation.Y * -1;
+		break;
+	case EFaceDirection::EFD_Back:
+		HorizontalPlace *= -1;
+		break;
+	}
+
 	// Diagonals movement
 	if (MouseInputValue.X > 0 && MouseInputValue.Y > 0)
 	{
-		if (HitLocation.X < 0 && HitLocation.Z > 0)
+		if (HorizontalPlace < 0 && HitLocation.Z > 0)
 		{
 			return 1;
 		}
-		if (HitLocation.X > 0 && HitLocation.Z < 0)
+		if (HorizontalPlace > 0 && HitLocation.Z < 0)
 		{
 			return -1;
 		}
@@ -206,11 +226,11 @@ int32 APearlGateButton::GetRotationIncrement(FVector HitLocation, FVector2D Mous
 	}
 	if (MouseInputValue.X > 0 && MouseInputValue.Y < 0)
 	{
-		if (HitLocation.X > 0 && HitLocation.Z > 0)
+		if (HorizontalPlace > 0 && HitLocation.Z > 0)
 		{
 			return 1;
 		}
-		if (HitLocation.X < 0 && HitLocation.Z < 0)
+		if (HorizontalPlace < 0 && HitLocation.Z < 0)
 		{
 			return -1;
 		}
@@ -218,11 +238,11 @@ int32 APearlGateButton::GetRotationIncrement(FVector HitLocation, FVector2D Mous
 	}
 	if (MouseInputValue.X < 0 && MouseInputValue.Y < 0)
 	{
-		if (HitLocation.X < 0 && HitLocation.Z > 0)
+		if (HorizontalPlace < 0 && HitLocation.Z > 0)
 		{
 			return -1;
 		}
-		if (HitLocation.X > 0 && HitLocation.Z < 0)
+		if (HorizontalPlace > 0 && HitLocation.Z < 0)
 		{
 			return 1;
 		}
@@ -230,11 +250,11 @@ int32 APearlGateButton::GetRotationIncrement(FVector HitLocation, FVector2D Mous
 	}
 	if (MouseInputValue.X < 0 && MouseInputValue.Y > 0)
 	{
-		if (HitLocation.X > 0 && HitLocation.Z > 0)
+		if (HorizontalPlace > 0 && HitLocation.Z > 0)
 		{
 			return -1;
 		}
-		if (HitLocation.X < 0 && HitLocation.Z < 0)
+		if (HorizontalPlace < 0 && HitLocation.Z < 0)
 		{
 			return 1;
 		}
@@ -267,11 +287,11 @@ int32 APearlGateButton::GetRotationIncrement(FVector HitLocation, FVector2D Mous
 	}
 	if (MouseInputValue.X == 0 && MouseInputValue.Y > 0)
 	{
-		if (HitLocation.X < 0)
+		if (HorizontalPlace < 0)
 		{
 			return 1;
 		}
-		if (HitLocation.X > 0)
+		if (HorizontalPlace > 0)
 		{
 			return -1;
 		}
@@ -279,11 +299,11 @@ int32 APearlGateButton::GetRotationIncrement(FVector HitLocation, FVector2D Mous
 	}
 	if (MouseInputValue.X == 0 && MouseInputValue.Y < 0)
 	{
-		if (HitLocation.X < 0)
+		if (HorizontalPlace < 0)
 		{
 			return -1;
 		}
-		if (HitLocation.X > 0)
+		if (HorizontalPlace > 0)
 		{
 			return 1;
 		}

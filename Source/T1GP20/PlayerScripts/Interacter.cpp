@@ -40,14 +40,10 @@ AActor* UInteracter::TriggerInteract(FTransform RayOrigin, FVector ForwardVector
 	FVector End = Start + (ForwardVector * ShootingDistance);
 	FHitResult Hit;
 
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2);
-
 	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("name =  %s"), *Hit.GetActor()->GetName());
 		if (Cast<IInteractable>(Hit.GetActor()))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("HIT INTERACTABLE"));
 			Cast<IInteractable>(Hit.GetActor())->Execute_Interact(Hit.GetActor());
 		}
 	}

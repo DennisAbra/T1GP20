@@ -9,6 +9,16 @@
 /**
  * 
  */
+UENUM(BlueprintType)
+enum class EFaceDirection : uint8
+{
+	EFD_Front	UMETA(DisplayName = "Front"),
+	EFD_Rright	UMETA(DisplayName = "Right"),
+	EFD_Left	UMETA(DisplayName = "Left"),
+	EFD_Back	UMETA(DisplayName = "Back"),
+
+	EFD_MAX		UMETA(DisplayName = "Default_Max")
+};
 UCLASS()
 class T1GP20_API APearlGateButton : public AItem
 {
@@ -25,6 +35,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateButton")
 	class UAudioComponent* PuzzleAudioComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
+	EFaceDirection FaceDirection;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
 	float InterpSpeed;
@@ -72,7 +85,7 @@ public:
 	void SetPuzzleActivate(bool Value);
 
 	UFUNCTION(BlueprintCallable)
-	int32 GetRotationIncrement(FVector HitLocation, FVector2D MouseInputValue);
+	int32 GetRotationIncrement(EFaceDirection Direction, FVector HitLocation, FVector2D MouseInputValue);
 	UFUNCTION(BlueprintCallable)
 	void EmitRotationSignal();
 	UFUNCTION(BlueprintCallable)
