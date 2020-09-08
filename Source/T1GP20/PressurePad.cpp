@@ -48,7 +48,7 @@ void APressurePad::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 void APressurePad::CheckScale(AActor* OtherActor, UPrimitiveComponent* OtherComp)
 {
 	if (!bComplete)
-		if (CryptDoor && OtherActor)
+		if (OtherActor)
 		{
 			AItem* Object = Cast<AItem>(OtherActor);
 			if (Object)
@@ -82,6 +82,7 @@ void APressurePad::CheckScale(AActor* OtherActor, UPrimitiveComponent* OtherComp
 						{
 							bComplete = true;
 							GetWorldTimerManager().SetTimer(PuzzleTimerHandle, this, &APressurePad::CallPuzzleActivate, DelayToCallPuzzle);
+							//CallPuzzleActivate();
 							TriggerPass();
 						}
 					}
@@ -99,7 +100,7 @@ void APressurePad::CheckScale(AActor* OtherActor, UPrimitiveComponent* OtherComp
 void APressurePad::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if (!bComplete)
-	if (CryptDoor && OtherActor)
+	if (OtherActor)
 	{
 		AItem* Object = Cast<AItem>(OtherActor);
 		BackToUnTrigger(Object);
