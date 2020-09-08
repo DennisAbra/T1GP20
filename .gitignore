@@ -73,3 +73,10 @@ Plugins/*/Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 Content/Maps/FirstPlableMap.umap
+Content/Blueprints/BP_BlowTorch.uasset
+Content/Blueprints/BP_BlowTorchManager.uasset
+Content/Maps/Sections/Lights.umap
+Content/Materials/M_Stained_Glass.uasset
+Content/Materials/MI_Glass_Testing_Stained_Glass.uasset
+Content/Textures/TexturesCom_WindowStainedGlass0063_M.uasset
+Content/Textures/TexturesCom_WindowStainedGlass0139_M.uasset
