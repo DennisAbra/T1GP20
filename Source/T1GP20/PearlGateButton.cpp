@@ -121,6 +121,7 @@ void APearlGateButton::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AA
 		bMouseLeftClickToggle = false;
 		Player->bMouseLook = true;
 		FinishInteract();
+		StopPlayRollingSound();
 	}
 }
 
