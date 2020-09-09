@@ -99,12 +99,17 @@ void APressurePad::CheckScale(AActor* OtherActor, UPrimitiveComponent* OtherComp
 
 void APressurePad::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	//TryCallUntrigger(OtherActor);
+}
+
+void APressurePad::TryCallUntrigger(AActor* OtherActor)
+{
 	if (!bComplete)
-	if (OtherActor)
-	{
-		AItem* Object = Cast<AItem>(OtherActor);
-		BackToUnTrigger(Object);
-	}
+		if (OtherActor)
+		{
+			AItem* Object = Cast<AItem>(OtherActor);
+			BackToUnTrigger(Object);
+		}
 }
 
 

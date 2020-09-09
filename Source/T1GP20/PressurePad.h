@@ -80,6 +80,9 @@ public:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UFUNCTION(BlueprintCallable)
+	void TryCallUntrigger(AActor* OtherActor);
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Pressure Pad")
 	void LowerScalePad();
 
