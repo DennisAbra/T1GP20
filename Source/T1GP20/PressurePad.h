@@ -83,6 +83,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TryCallUntrigger(AActor* OtherActor);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void TurnOnHighlight();
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Pressure Pad")
 	void LowerScalePad();
 

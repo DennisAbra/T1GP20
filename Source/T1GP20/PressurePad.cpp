@@ -83,6 +83,7 @@ void APressurePad::CheckScale(AActor* OtherActor, UPrimitiveComponent* OtherComp
 							bComplete = true;
 							GetWorldTimerManager().SetTimer(PuzzleTimerHandle, this, &APressurePad::CallPuzzleActivate, DelayToCallPuzzle);
 							//CallPuzzleActivate();
+							
 							TriggerPass();
 						}
 					}
@@ -194,6 +195,7 @@ void APressurePad::CallPuzzleActivate()
 	if (GateButton)
 	{
 		GateButton->SetPuzzleActivate(true);
+		TurnOnHighlight();
 	}
 }
 
