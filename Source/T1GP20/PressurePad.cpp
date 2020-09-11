@@ -80,8 +80,6 @@ void APressurePad::CheckScale(AActor* OtherActor, UPrimitiveComponent* OtherComp
 						}
 						if (bItemCorrect && bWeightCorrect)
 						{
-							bComplete = true;
-							GetWorldTimerManager().SetTimer(PuzzleTimerHandle, this, &APressurePad::CallPuzzleActivate, DelayToCallPuzzle);
 							//CallPuzzleActivate();
 							
 							TriggerPass();
@@ -96,7 +94,6 @@ void APressurePad::CheckScale(AActor* OtherActor, UPrimitiveComponent* OtherComp
 			}
 		}
 }
-
 
 void APressurePad::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
@@ -124,6 +121,8 @@ void APressurePad::UpdateScalePadLocation(FVector Location)
 
 void APressurePad::TriggerPass()
 {
+	bComplete = true;
+	GetWorldTimerManager().SetTimer(PuzzleTimerHandle, this, &APressurePad::CallPuzzleActivate, DelayToCallPuzzle);
 	if (CryptDoor && bComplete)
 	{
 		CryptDoor->LibraryPuzzleComplete();
@@ -147,7 +146,7 @@ void APressurePad::BackToUnTrigger(AItem* Item)
 	{
 		CurrentAllItemsWeight -= Item->MassWeight;
 		ItemOnPadList.Remove(Item);
-		bWeightCorrect = CheckWeight();
+		bWeightCorrect = IsWeightCorrect();
 	}
 	if (Item == KeyItem)
 	{
@@ -175,7 +174,7 @@ void APressurePad::CheckItem(AItem* Item)
 }
 
 
-bool APressurePad::CheckWeight()
+bool APressurePad::IsWeightCorrect()
 {
 	float weight = 0;
 	for (auto Item : ItemOnPadList)
@@ -183,7 +182,7 @@ bool APressurePad::CheckWeight()
 		weight += Item.Value;
 	}
 
-	if (weight < MaxWeightToTrigger && weight > MinWeightToTrigger)
+	if (weight <= MaxWeightToTrigger && weight >= MinWeightToTrigger)
 	{
 		return true;
 	}
@@ -216,6 +215,63 @@ void APressurePad::CheckWeight(AItem* Item)
 				TriggerPass();
 		}
 	}
+}
+
+bool APressurePad::CheckItem(AActor* Actor)
+{
+	AItem* Item = Cast<AItem>(Actor);
+	if (Item)
+	{
+		if (Item == KeyItem)
+		{
+			if (IsWeightCorrect())
+			{
+				TriggerPass();
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+bool APressurePad::CheckWeight(AActor* Actor)
+{
+	AItem* Item = Cast<AItem>(Actor);
+	if (Item)
+	{
+		AddWeight(Item);
+		if (IsWeightCorrect())
+		{
+			if (IsItemCorrect())
+			{
+				TriggerPass();
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+void APressurePad::AddWeight(AItem* Item)
+{
+	float ObjectWeight = Item->MassWeight;
+	if (ObjectWeight)
+	{
+		if (!ItemOnPadList.Contains(Item))
+		{
+			ItemOnPadList.Add(Item, ObjectWeight);
+			CurrentAllItemsWeight += ObjectWeight;
+		}
+	}
+}
+
+bool APressurePad::IsItemCorrect()
+{
+	if (bItemCorrect)
+	{
+		return true;
+	}
+	return false;
 }
 
 
