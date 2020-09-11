@@ -76,9 +76,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CheckScale(AActor* OtherActor, UPrimitiveComponent* OtherComp);
 
-
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	
+	UFUNCTION(BlueprintCallable)
+	bool CheckItem(AActor* Actor);
+
+	UFUNCTION(BlueprintCallable)
+	bool CheckWeight(AActor* Actor);
+
+	UFUNCTION(BlueprintCallable)
+	void AddWeight(AItem* Item);
+
+	UFUNCTION(BlueprintCallable)
+	void TriggerPass();
 
 	UFUNCTION(BlueprintCallable)
 	void TryCallUntrigger(AActor* OtherActor);
@@ -95,7 +106,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Pressure Pad")
 	void UpdateScalePadLocation(FVector Location);
 
-	bool CheckWeight();
+	bool IsWeightCorrect();
+	bool IsItemCorrect();
 
 	UFUNCTION()
 	void CallPuzzleActivate();
@@ -104,7 +116,6 @@ public:
 private:
 	FVector InitialDoorLocation;
 	FVector InitialScalePadLocation;
-	void TriggerPass();
 	void BackToUnTrigger(AItem* Item);
 	void CheckItem(AItem* Item);
 	void CheckWeight(AItem* Item);
