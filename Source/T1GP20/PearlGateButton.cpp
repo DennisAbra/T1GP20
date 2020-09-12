@@ -169,10 +169,7 @@ void APearlGateButton::FinishInteract()
 		PuzzleButton->SetRelativeRotation(SlotRotation);
 		if (PuzzleCorrectSound && !bHasPlayedCorrectSound)
 		{
-			if (PuzzleAudioComponent->IsPlaying())
-			{
-				StopPlayRollingSound();
-			}
+			StopPlayRollingSound();
 			UGameplayStatics::PlaySoundAtLocation(this, PuzzleCorrectSound, GetActorLocation(), CorrectSoundVolume);
 			bHasPlayedCorrectSound = true;
 		}
