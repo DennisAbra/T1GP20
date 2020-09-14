@@ -47,6 +47,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Other")
 	bool bOffCenterHoldingPos;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Sound", meta = (ToolTip = "0 = Default\n1 = Wood\n2 = Glass\n3 = GlassBreak\n4 = Rock\n5 = Heavy Metal"))
+	int MaterialInt = 0;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
