@@ -81,7 +81,7 @@ void APressurePad::CheckScale(AActor* OtherActor, UPrimitiveComponent* OtherComp
 						if (bItemCorrect && bWeightCorrect)
 						{
 							//CallPuzzleActivate();
-							
+
 							TriggerPass();
 						}
 					}
@@ -147,11 +147,23 @@ void APressurePad::BackToUnTrigger(AItem* Item)
 		CurrentAllItemsWeight -= Item->MassWeight;
 		ItemOnPadList.Remove(Item);
 		bWeightCorrect = IsWeightCorrect();
+		if (IsItemCorrect() && IsWeightCorrect())
+		{
+			TriggerPass();
+		}
 	}
-	if (Item == KeyItem)
+	if (Items.Contains(Item))
 	{
-		bItemCorrect = false;
+		Items.Remove(Item);
+		if (IsItemCorrect() && IsWeightCorrect())
+		{
+			TriggerPass();
+		}
 	}
+	//if (Item == KeyItem)
+	//{
+	//	bItemCorrect = false;
+	//}
 
 	//if (CryptDoor)
 	//{
@@ -222,7 +234,8 @@ bool APressurePad::CheckItem(AActor* Actor)
 	AItem* Item = Cast<AItem>(Actor);
 	if (Item)
 	{
-		if (Item == KeyItem)
+		Items.Add(Item);
+		if (Item == KeyItem && Items.Num() == 1)
 		{
 			if (IsWeightCorrect())
 			{
@@ -230,6 +243,7 @@ bool APressurePad::CheckItem(AActor* Actor)
 			}
 			return true;
 		}
+
 	}
 	return false;
 }
@@ -267,7 +281,7 @@ void APressurePad::AddWeight(AItem* Item)
 
 bool APressurePad::IsItemCorrect()
 {
-	if (bItemCorrect)
+	if (Items.Num() == 1 && Items[0] == KeyItem)
 	{
 		return true;
 	}

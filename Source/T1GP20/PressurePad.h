@@ -121,5 +121,6 @@ private:
 	void CheckWeight(AItem* Item);
 	bool bItemCorrect;
 	bool bWeightCorrect;
+	TArray<AItem*> Items;
 
 };
