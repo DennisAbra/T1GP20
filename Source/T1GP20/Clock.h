@@ -10,7 +10,7 @@ UENUM(BlueprintType)
 enum class ERotateDirection : uint8
 {
 	ERD_Pitch	UMETA(DisplayName = "Pitch"),
-	//ERD_Yaw		UMETA(DisplayName = "Yaw"),
+	ERD_Yaw		UMETA(DisplayName = "Yaw"),
 	ERD_Roll	UMETA(DisplayName = "Roll"),
 
 	ERD_Max		UMETA(DisplayName = "DefaultMax")
@@ -54,8 +54,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Clock")
 	int32 MaxSecondToEndTime;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Clock")
-	ERotateDirection RotateDirection = ERotateDirection::ERD_Pitch;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Clock")
+	ERotateDirection RotateDirection;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Clock")
 	int32 TimeTickingCounter;

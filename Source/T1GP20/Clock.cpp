@@ -60,7 +60,7 @@ void AClock::BeginPlay()
 	
 	SetStartTime();
 	RingBellCounter = SecondsToRingBellInterval;
-	//
+	
 	if (Player == nullptr)
 	{
 		Player = Cast<AFirstPersonController>(GetWorld()->GetFirstPlayerController()->GetCharacter());
@@ -100,11 +100,11 @@ void AClock::StartClockTicking(ERotateDirection Direction)
 		MinuteHandParent->AddLocalRotation(FRotator(-MinuteHandRotateDegreePerSec, 0.0f, 0.0f));
 		HourHandParent->AddLocalRotation(FRotator(-HourHandRotateDegreePerSec, 0.0f, 0.0f));
 		break;
-	//case ERotateDirection::ERD_Yaw:
-	//	SecondHandParent->AddLocalRotation(FRotator(0.0f, SecondHandRotateDegreePerSec, 0.0f));
-	//	MinuteHandParent->AddLocalRotation(FRotator(0.0f, MinuteHandRotateDegreePerSec, 0.0f));
-	//	HourHandParent->AddLocalRotation(FRotator(0.0f, HourHandRotateDegreePerSec, 0.0f));
-	//	break;
+	case ERotateDirection::ERD_Yaw:
+		SecondHandParent->AddLocalRotation(FRotator(0.0f, SecondHandRotateDegreePerSec, 0.0f));
+		MinuteHandParent->AddLocalRotation(FRotator(0.0f, MinuteHandRotateDegreePerSec, 0.0f));
+		HourHandParent->AddLocalRotation(FRotator(0.0f, HourHandRotateDegreePerSec, 0.0f));
+		break;
 	case ERotateDirection::ERD_Roll:
 		SecondHandParent->AddLocalRotation(FRotator(0.0f, 0.0f, SecondHandRotateDegreePerSec));
 		MinuteHandParent->AddLocalRotation(FRotator(0.0f, 0.0f, MinuteHandRotateDegreePerSec));
@@ -138,15 +138,14 @@ void AClock::SetStartTime()
 
 		MinHandRotation.Pitch = ((float)(StartMinute * MinSacle)) * -1;
 		MinuteHandParent->SetRelativeRotation(MinHandRotation);
-
 		break;
-	//case ERotateDirection::ERD_Yaw:
-	//	HourHandRotation.Yaw = (float)(StartHour * HourScale) + (float)(StartMinute * HourScale / 60);
-	//	HourHandParent->SetRelativeRotation(HourHandRotation);
+	case ERotateDirection::ERD_Yaw:
+		HourHandRotation.Yaw = (float)(StartHour * HourScale) + (float)(StartMinute * HourScale / 60);
+		HourHandParent->SetRelativeRotation(HourHandRotation);
 
-	//	MinHandRotation.Yaw = (float)(StartMinute * MinSacle);
-	//	MinuteHandParent->SetRelativeRotation(MinHandRotation);
-	//	break;
+		MinHandRotation.Yaw = (float)(StartMinute * MinSacle);
+		MinuteHandParent->SetRelativeRotation(MinHandRotation);
+		break;
 	case ERotateDirection::ERD_Roll:
 		HourHandRotation.Roll = (float)(StartHour * HourScale) + (float)(StartMinute * HourScale / 60);
 		HourHandParent->SetRelativeRotation(HourHandRotation);
