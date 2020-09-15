@@ -137,6 +137,7 @@ void APressurePad::TriggerPass()
 	{
 		UGameplayStatics::PlaySound2D(this, PassSound);
 	}
+	TurnOnHighlight();
 }
 
 void APressurePad::BackToUnTrigger(AItem* Item)
