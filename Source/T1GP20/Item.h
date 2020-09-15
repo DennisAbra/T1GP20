@@ -47,7 +47,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Other")
 	bool bOffCenterHoldingPos;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Sound", meta = (ToolTip = "0 = Default\n1 = Wood\n2 = Glass\n3 = GlassBreak\n 4 = Rock\n5 = Heavy Metal\n6 = Bone\n7 = Anchor(small thing)\n8 = Book\n9 = Picture-frame(small woodish)\n10 = Torch(woord & metal)\n11 = Chair"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Sound", meta = (ToolTip = "0 = Default\n1 = Wood\n2 = Glass\n3 = GlassBreak\n 4 = Rock\n5 = Heavy Metal\n6 = Bone\n7 = Anchor(small thing)\n8 = Book\n9 = Picture-frame(small woodish)\n10 = Torch(woord & metal)\n11 = Chair\n12 = Candle(metal)"))
 	int MaterialInt = 0;
 
 protected:
