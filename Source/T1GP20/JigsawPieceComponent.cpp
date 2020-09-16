@@ -51,9 +51,11 @@ void UJigsawPieceComponent::SetFinalTransform(FTransform FinalTransform)
 	FinalRotation = FinalTransform.GetRotation().Rotator();
 }
 
-void UJigsawPieceComponent::SnapIntoPlace()
+void UJigsawPieceComponent::SnapIntoPlace(UStaticMeshComponent* MeshToMove)
 {
-	GetOwner()->SetActorLocation(FinalPosition);
-	GetOwner()->SetActorRotation(FinalRotation.Quaternion());
+	MeshToMove->SetWorldLocation(FinalPosition);
+	MeshToMove->SetWorldRotation(FinalRotation);
+	//GetOwner()->SetActorLocation(FinalPosition);
+	//GetOwner()->SetActorRotation(FinalRotation.Quaternion());
 }
 

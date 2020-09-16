@@ -48,7 +48,7 @@ public:
 	void SetFinalTransform(FTransform FinalTransform);
 
 	UFUNCTION(BlueprintCallable)
-	void SnapIntoPlace();
+	void SnapIntoPlace(UStaticMeshComponent* MeshToMove);
 
 		
 };
