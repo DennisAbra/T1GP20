@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PlayerScripts/Interactable.h"
 #include "PearlyGate.generated.h"
 
 UCLASS()
-class T1GP20_API APearlyGate : public AActor
+class T1GP20_API APearlyGate : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 	

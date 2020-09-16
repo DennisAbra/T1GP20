@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PlayerScripts/Interactable.h"
 #include "Clock.generated.h"
 
 UENUM(BlueprintType)
@@ -16,7 +17,7 @@ enum class ERotateDirection : uint8
 	ERD_Max		UMETA(DisplayName = "DefaultMax")
 };
 UCLASS()
-class T1GP20_API AClock : public AActor
+class T1GP20_API AClock : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 	
