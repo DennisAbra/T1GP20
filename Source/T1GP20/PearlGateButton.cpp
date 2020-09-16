@@ -165,7 +165,8 @@ void APearlGateButton::FinishInteract()
 	IsNotInteracting();
 
 	EmitRotationSignal();
-	if (((PuzzleButton->GetRelativeRotation().Vector() - SlotRotation.Vector()).Size() <= AcceptableRange))
+	if ((PuzzleButton->GetRelativeRotation().Vector() - SlotRotation.Vector()).Size() <= AcceptableRange)
+	//if (PuzzleButton->GetRelativRo)
 	{
 		PuzzleButton->SetRelativeRotation(SlotRotation);
 		if (PuzzleCorrectSound && !bHasPlayedCorrectSound)
