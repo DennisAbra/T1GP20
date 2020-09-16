@@ -27,9 +27,6 @@ class T1GP20_API APearlGateButton : public AItem
 public:
 	APearlGateButton();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void IsNotInteracting();
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateButton")
 	UStaticMeshComponent* PuzzleButton;
 
@@ -88,10 +85,13 @@ public:
 	void SetPuzzleActivate(bool Value);
 
 	UFUNCTION(BlueprintCallable)
-
 	int32 GetRotationIncrement(EFaceDirection Direction, FVector HitLocation, FVector2D MouseInputValue);
+
 	UFUNCTION(BlueprintCallable)
 	void EmitRotationSignal();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void IsNotInteracting();
 private:
 	FRotator SlotRotation;
 	float AcceptableRange;

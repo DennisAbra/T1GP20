@@ -19,9 +19,6 @@ APearlGateButton::APearlGateButton()
 	PuzzleButton = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PuzzleButton"));
 	PuzzleButton->SetupAttachment(PuzzleParent);
 
-	/*PuzzleAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
-	PuzzleAudioComponent->SetupAttachment(GetRootComponent());*/
-
 	SlotRotation = FRotator(0.0f);
 	bOnOverlapping = false;
 	bMouseLeftClickToggle = false;
@@ -165,8 +162,8 @@ void APearlGateButton::FinishInteract()
 	IsNotInteracting();
 
 	EmitRotationSignal();
-	if ((PuzzleButton->GetRelativeRotation().Vector() - SlotRotation.Vector()).Size() <= AcceptableRange)
-	//if (PuzzleButton->GetRelativRo)
+	//if ((PuzzleButton->GetRelativeRotation().Vector() - SlotRotation.Vector()).Size() <= AcceptableRange)
+	if (FMath::Abs((SlotRotation.Roll - PuzzleButton->GetRelativeRotation().Roll) - 360) <= AcceptableRange)
 	{
 		PuzzleButton->SetRelativeRotation(SlotRotation);
 		if (PuzzleCorrectSound && !bHasPlayedCorrectSound)

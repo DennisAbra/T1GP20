@@ -23,7 +23,7 @@ APearlGateLock::APearlGateLock()
 	KeyMesh->SetupAttachment(GetRootComponent());
 
 	SlotRotation = FRotator(0.0f);
-	AcceptableRange = 0.2f;
+	AcceptableRange = 5.0f;
 	SelfDestroyDelay = 1.0f;
 
 	bIsDestroyed = false;
@@ -45,7 +45,7 @@ void APearlGateLock::RotateLock(FRotator Rotation)
 
 void APearlGateLock::CheckLockRotation()
 {
-	if ((LockMesh->GetRelativeRotation().Vector() - SlotRotation.Vector()).Size() <= AcceptableRange)
+	if (FMath::Abs((SlotRotation.Roll - LockMesh->GetRelativeRotation().Roll) - 360) <= AcceptableRange)
 	{
 		SnapToRotation();
 	}
