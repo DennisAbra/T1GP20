@@ -27,15 +27,15 @@ class T1GP20_API APearlGateButton : public AItem
 public:
 	APearlGateButton();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void IsNotInteracting();
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateButton")
 	UStaticMeshComponent* PuzzleButton;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateButton")
 	USceneComponent* PuzzleParent;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "PearlGateButton")
-	class UAudioComponent* PuzzleAudioComponent;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
 	EFaceDirection FaceDirection;
 
@@ -69,6 +69,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Sound", meta = (EditCondition = "DisactivatePuzzleSound != nullptr"))
 	float CorrectSoundVolume;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bOnOverlapping;
+
 protected:
 	void BeginPlay() override;
 
@@ -85,17 +88,13 @@ public:
 	void SetPuzzleActivate(bool Value);
 
 	UFUNCTION(BlueprintCallable)
+
 	int32 GetRotationIncrement(EFaceDirection Direction, FVector HitLocation, FVector2D MouseInputValue);
 	UFUNCTION(BlueprintCallable)
 	void EmitRotationSignal();
-	UFUNCTION(BlueprintCallable)
-	void PlayRollingSound();
-	UFUNCTION(BlueprintCallable)
-	void StopPlayRollingSound();
 private:
 	FRotator SlotRotation;
 	float AcceptableRange;
-	bool bOnOverlapping;
 	bool bMouseLeftClickToggle;
 	bool bObjectRotationActivate;
 	bool bHasPlayedCorrectSound;
