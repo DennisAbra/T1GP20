@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PlayerScripts/Interactable.h"
 #include "PressurePad.generated.h"
 
 UENUM(BlueprintType)
@@ -16,7 +17,7 @@ enum class EActiveStatus : uint8
 	EAS_MAX			UMETA(DisplayName = "DefaultMax")
 };
 UCLASS()
-class T1GP20_API APressurePad : public AActor
+class T1GP20_API APressurePad : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 	
