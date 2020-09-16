@@ -19,8 +19,8 @@ APearlGateButton::APearlGateButton()
 	PuzzleButton = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PuzzleButton"));
 	PuzzleButton->SetupAttachment(PuzzleParent);
 
-	PuzzleAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
-	PuzzleAudioComponent->SetupAttachment(GetRootComponent());
+	/*PuzzleAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	PuzzleAudioComponent->SetupAttachment(GetRootComponent());*/
 
 	SlotRotation = FRotator(0.0f);
 	bOnOverlapping = false;
@@ -121,7 +121,6 @@ void APearlGateButton::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AA
 		bMouseLeftClickToggle = false;
 		Player->bMouseLook = true;
 		FinishInteract();
-		StopPlayRollingSound();
 	}
 }
 
@@ -163,13 +162,14 @@ void APearlGateButton::StartInteract()
 void APearlGateButton::FinishInteract()
 {
 	SetActivateObjectRotation(false);
+	IsNotInteracting();
+
 	EmitRotationSignal();
 	if (((PuzzleButton->GetRelativeRotation().Vector() - SlotRotation.Vector()).Size() <= AcceptableRange))
 	{
 		PuzzleButton->SetRelativeRotation(SlotRotation);
 		if (PuzzleCorrectSound && !bHasPlayedCorrectSound)
 		{
-			StopPlayRollingSound();
 			UGameplayStatics::PlaySoundAtLocation(this, PuzzleCorrectSound, GetActorLocation(), CorrectSoundVolume);
 			bHasPlayedCorrectSound = true;
 		}
@@ -327,26 +327,4 @@ void APearlGateButton::EmitRotationSignal()
 		PearlGateLock->RotateLock(PuzzleButton->GetRelativeRotation());
 	}
 }
-
-void APearlGateButton::PlayRollingSound()
-{
-	if (RollingSound)
-	{
-		if (!PuzzleAudioComponent->IsActive() && !PuzzleAudioComponent->IsPlaying())
-		{
-			PuzzleAudioComponent->SetSound(RollingSound);
-			PuzzleAudioComponent->SetVolumeMultiplier(RollingSoundVolume);
-			PuzzleAudioComponent->Play(0.0f);
-		}
-	}
-}
-
-void APearlGateButton::StopPlayRollingSound()
-{
-	if (PuzzleAudioComponent->IsPlaying())
-	{
-		PuzzleAudioComponent->Stop();
-	}
-}
-
 
