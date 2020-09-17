@@ -50,5 +50,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SnapIntoPlace(UStaticMeshComponent* MeshToMove);
 
-		
+	UFUNCTION(BlueprintCallable)
+		FTransform GetFinalTransform();
 };
