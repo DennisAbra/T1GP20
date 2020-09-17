@@ -47,6 +47,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	bool bHasPlayedSound = false;
 
 public:	
 	void RotateLock(FRotator Rotation);
