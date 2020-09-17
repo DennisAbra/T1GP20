@@ -41,7 +41,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	UFUNCTION(BlueprintImplementableEvent, Category = "PearlyGate")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "PearlyGate")
 	void OpenGate();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "PearlyGate")
