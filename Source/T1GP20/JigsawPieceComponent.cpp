@@ -59,3 +59,11 @@ void UJigsawPieceComponent::SnapIntoPlace(UStaticMeshComponent* MeshToMove)
 	//GetOwner()->SetActorRotation(FinalRotation.Quaternion());
 }
 
+FTransform UJigsawPieceComponent::GetFinalTransform()
+{
+	FTransform Final;
+	Final.SetLocation(FinalPosition);
+	Final.SetRotation(FinalRotation.Quaternion());
+	return Final;
+}
+
