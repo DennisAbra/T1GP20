@@ -92,6 +92,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void IsNotInteracting();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void InteractWhenNotActivate();
 private:
 	FRotator SlotRotation;
 	float AcceptableRange;

@@ -125,6 +125,7 @@ void APearlGateButton::Interact_Implementation()
 {
 	if (!bActive)
 	{
+		InteractWhenNotActivate();
 		return;
 	}
 	if (PearlGateLock && PearlGateLock->bIsDestroyed)
