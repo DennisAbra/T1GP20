@@ -69,8 +69,9 @@ void APearlGateLock::EmitPuzzleCompleteSignal()
 
 void APearlGateLock::PlayUnLockSound()
 {
-	if (UnLockSound)
+	if (UnLockSound && !bHasPlayedSound)
 	{
+		bHasPlayedSound = true;
 		UGameplayStatics::PlaySoundAtLocation(this, UnLockSound, GetActorLocation(), UnLockSoundVolume);
 	}
 }
