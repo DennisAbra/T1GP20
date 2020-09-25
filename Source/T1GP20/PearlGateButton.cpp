@@ -36,6 +36,7 @@ APearlGateButton::APearlGateButton()
 	CorrectSoundVolume = 1.0f;
 
 	bHasPlayedCorrectSound = false;
+
 }
 
 void APearlGateButton::BeginPlay()
@@ -55,6 +56,8 @@ void APearlGateButton::BeginPlay()
 	{
 		Player = Cast<AFirstPersonController>(GetWorld()->GetFirstPlayerController()->GetCharacter());
 	}
+
+	InitializeMatrix();
 }
 
 void APearlGateButton::Tick(float DeltaTime)
@@ -212,105 +215,167 @@ int32 APearlGateButton::GetRotationIncrement(EFaceDirection Direction, FVector H
 		break;
 	}
 
-	// Diagonals movement
-	if (MouseInputValue.X > 0 && MouseInputValue.Y > 0)
+	int CurrentMouseX = (MouseInputValue.X > 0) ? 3 : (MouseInputValue.X < 0) ? 1 : 2;
+	int CurrentMouseY = (MouseInputValue.Y > 0) ? 3 : (MouseInputValue.Y < 0) ? 1 : 2;
+	int CurrentHitPlaceX = (HorizontalPlace > 0) ? 3 : (HorizontalPlace < 0) ? 1 : 2;
+	int CurrentHitPlaceZ = (HitLocation.Z > 0) ? 3 : (HitLocation.Z < 0) ? 1 : 2;
+
+	int Key = CurrentMouseX * 1000 + CurrentMouseY * 100 + CurrentHitPlaceX * 10 + CurrentHitPlaceZ;
+
+	if (RollingOperationMatrix.Contains(Key))
 	{
-		if (HorizontalPlace < 0 && HitLocation.Z > 0)
-		{
-			return 1;
-		}
-		if (HorizontalPlace > 0 && HitLocation.Z < 0)
-		{
-			return -1;
-		}
-		return 0;
+		return RollingOperationMatrix[Key];
 	}
-	if (MouseInputValue.X > 0 && MouseInputValue.Y < 0)
-	{
-		if (HorizontalPlace > 0 && HitLocation.Z > 0)
-		{
-			return 1;
-		}
-		if (HorizontalPlace < 0 && HitLocation.Z < 0)
-		{
-			return -1;
-		}
-		return 0;
-	}
-	if (MouseInputValue.X < 0 && MouseInputValue.Y < 0)
-	{
-		if (HorizontalPlace < 0 && HitLocation.Z > 0)
-		{
-			return -1;
-		}
-		if (HorizontalPlace > 0 && HitLocation.Z < 0)
-		{
-			return 1;
-		}
-		return 0;
-	}
-	if (MouseInputValue.X < 0 && MouseInputValue.Y > 0)
-	{
-		if (HorizontalPlace > 0 && HitLocation.Z > 0)
-		{
-			return -1;
-		}
-		if (HorizontalPlace < 0 && HitLocation.Z < 0)
-		{
-			return 1;
-		}
-		return 0;
-	}
-	// Straights movement
-	if (MouseInputValue.X > 0 && MouseInputValue.Y == 0)
-	{
-		if (HitLocation.Z > 0)
-		{
-			return 1;
-		}
-		if (HitLocation.Z < 0)
-		{
-			return -1;
-		}
-		return 0;
-	}
-	if (MouseInputValue.X < 0 && MouseInputValue.Y == 0)
-	{
-		if (HitLocation.Z > 0)
-		{
-			return -1;
-		}
-		if (HitLocation.Z < 0)
-		{
-			return 1;
-		}
-		return 0;
-	}
-	if (MouseInputValue.X == 0 && MouseInputValue.Y > 0)
-	{
-		if (HorizontalPlace < 0)
-		{
-			return 1;
-		}
-		if (HorizontalPlace > 0)
-		{
-			return -1;
-		}
-		return 0;
-	}
-	if (MouseInputValue.X == 0 && MouseInputValue.Y < 0)
-	{
-		if (HorizontalPlace < 0)
-		{
-			return -1;
-		}
-		if (HorizontalPlace > 0)
-		{
-			return 1;
-		}
-		return 0;
-	}
+	
 	return 0;
+	
+	//// Diagonals movement
+	//if (MouseInputValue.X > 0 && MouseInputValue.Y > 0)
+	//{
+	//	if (HorizontalPlace < 0 && HitLocation.Z > 0)
+	//	{
+	//		return 1;
+	//	}
+	//	if (HorizontalPlace > 0 && HitLocation.Z < 0)
+	//	{
+	//		return -1;
+	//	}
+	//	return 0;
+	//}
+	//if (MouseInputValue.X > 0 && MouseInputValue.Y < 0)
+	//{
+	//	if (HorizontalPlace > 0 && HitLocation.Z > 0)
+	//	{
+	//		return 1;
+	//	}
+	//	if (HorizontalPlace < 0 && HitLocation.Z < 0)
+	//	{
+	//		return -1;
+	//	}
+	//	return 0;
+	//}
+	//if (MouseInputValue.X < 0 && MouseInputValue.Y < 0)
+	//{
+	//	if (HorizontalPlace < 0 && HitLocation.Z > 0)
+	//	{
+	//		return -1;
+	//	}
+	//	if (HorizontalPlace > 0 && HitLocation.Z < 0)
+	//	{
+	//		return 1;
+	//	}
+	//	return 0;
+	//}
+	//if (MouseInputValue.X < 0 && MouseInputValue.Y > 0)
+	//{
+	//	if (HorizontalPlace > 0 && HitLocation.Z > 0)
+	//	{
+	//		return -1;
+	//	}
+	//	if (HorizontalPlace < 0 && HitLocation.Z < 0)
+	//	{
+	//		return 1;
+	//	}
+	//	return 0;
+	//}
+	//// Straights movement
+	//if (MouseInputValue.X > 0 && MouseInputValue.Y == 0)
+	//{
+	//	if (HitLocation.Z > 0)
+	//	{
+	//		return 1;
+	//	}
+	//	if (HitLocation.Z < 0)
+	//	{
+	//		return -1;
+	//	}
+	//	return 0;
+	//}
+	//if (MouseInputValue.X < 0 && MouseInputValue.Y == 0)
+	//{
+	//	if (HitLocation.Z > 0)
+	//	{
+	//		return -1;
+	//	}
+	//	if (HitLocation.Z < 0)
+	//	{
+	//		return 1;
+	//	}
+	//	return 0;
+	//}
+	//if (MouseInputValue.X == 0 && MouseInputValue.Y > 0)
+	//{
+	//	if (HorizontalPlace < 0)
+	//	{
+	//		return 1;
+	//	}
+	//	if (HorizontalPlace > 0)
+	//	{
+	//		return -1;
+	//	}
+	//	return 0;
+	//}
+	//if (MouseInputValue.X == 0 && MouseInputValue.Y < 0)
+	//{
+	//	if (HorizontalPlace < 0)
+	//	{
+	//		return -1;
+	//	}
+	//	if (HorizontalPlace > 0)
+	//	{
+	//		return 1;
+	//	}
+	//	return 0;
+	//}
+	
+}
+
+void APearlGateButton::InitializeMatrix()
+{
+	// 1 => less than 0, 2 = equal 0, 3 = more than 0
+	// 3313 => MouseInput.X > 0, MouseInput.Y > 0, HitLocation.X < 0, HitLocation.Z > 0 
+	
+	// Diagonals movement
+	RollingOperationMatrix.Add(3313, 1);
+	RollingOperationMatrix.Add(3331, -1);
+	RollingOperationMatrix.Add(3133, 1);
+	RollingOperationMatrix.Add(3111, -1);
+	RollingOperationMatrix.Add(1113, -1);
+	RollingOperationMatrix.Add(1131, 1);
+	RollingOperationMatrix.Add(1333, -1);
+	RollingOperationMatrix.Add(1311, 1);
+	// Striaghts movement
+	RollingOperationMatrix.Add(3213, 1);
+	RollingOperationMatrix.Add(3223, 1);
+	RollingOperationMatrix.Add(3233, 1);
+
+	RollingOperationMatrix.Add(3211, -1);
+	RollingOperationMatrix.Add(3221, -1);
+	RollingOperationMatrix.Add(3231, -1);
+
+	RollingOperationMatrix.Add(1213, -1);
+	RollingOperationMatrix.Add(1223, -1);
+	RollingOperationMatrix.Add(1233, -1);
+
+	RollingOperationMatrix.Add(1211, 1);
+	RollingOperationMatrix.Add(1221, 1);
+	RollingOperationMatrix.Add(1223, 1);
+
+	RollingOperationMatrix.Add(2311, 1);
+	RollingOperationMatrix.Add(2312, 1);
+	RollingOperationMatrix.Add(2313, 1);
+
+	RollingOperationMatrix.Add(2331, -1);
+	RollingOperationMatrix.Add(2332, -1);
+	RollingOperationMatrix.Add(2333, -1);
+
+	RollingOperationMatrix.Add(2111, -1);
+	RollingOperationMatrix.Add(2112, -1);
+	RollingOperationMatrix.Add(2113, -1);
+
+	RollingOperationMatrix.Add(2131, 1);
+	RollingOperationMatrix.Add(2132, 1);
+	RollingOperationMatrix.Add(2133, 1);
 }
 
 void APearlGateButton::SetActivateObjectRotation(bool Active)

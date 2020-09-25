@@ -101,8 +101,20 @@ private:
 	bool bMouseLeftClickToggle;
 	bool bObjectRotationActivate;
 	bool bHasPlayedCorrectSound;
+
+	/**
+	* A Matrix to indicate how rolling-disc puzzle should rotate when player starts interaction.
+	* The matrix stores Mouse Input X-value, Y-value, line trace hit location X-value and z-value as KEY.
+	* 1 = less than 0, 2 = equal 0, 3 = more than 0, so KEY combination can be like 2212, it represents as:
+	*         3            3           1           3 
+	*    [MouseInputX, MouseInputY, HitPlaceX, HitPlaceZ]
+	* And the VALUE of the matrix return 1 or -1 for telling rolling-disc should rotate in clockwise or in counterclockwise direction
+	* if the key we search is not inside the matrix, return 0
+	*/
+	TMap<int32, int32> RollingOperationMatrix;
+	void InitializeMatrix();
+
 	void SetActivateObjectRotation(bool Active);
-	
 	void StartInteract();
 	void FinishInteract();
 };
