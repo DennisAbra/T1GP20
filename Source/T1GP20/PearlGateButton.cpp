@@ -64,6 +64,7 @@ void APearlGateButton::Tick(float DeltaTime)
 {
 	if (bObjectRotationActivate && Player)
 	{
+		// Blueprint event
 		RotateObject();
 		// Rotate object with locked camera view
 		/*Player->bMouseLook = false;
@@ -147,10 +148,6 @@ void APearlGateButton::Interact_Implementation()
 		else
 		{
 			FinishInteract();
-			if (Player)
-			{
-				Player->bMouseLook = true;
-			}
 		}
 	}
 }
