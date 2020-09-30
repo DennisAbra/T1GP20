@@ -45,6 +45,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton")
 	bool bActive;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PearlGateButton")
+	bool bOnOverlapping;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Puzzle")
 	class APearlGateLock* PearlGateLock;
 
@@ -65,9 +68,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PearlGateButton | Sound", meta = (EditCondition = "DisactivatePuzzleSound != nullptr"))
 	float CorrectSoundVolume;
-
-	UPROPERTY(BlueprintReadWrite)
-	bool bOnOverlapping;
 
 protected:
 	void BeginPlay() override;
